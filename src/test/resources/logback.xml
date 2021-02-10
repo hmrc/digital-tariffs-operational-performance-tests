@@ -8,7 +8,7 @@
         </encoder>
     </appender>
 
-    <!--<logger name="io.gatling.http" level="DEBUG" />-->
+    <logger name="io.gatling.http" level="DEBUG" />
 
 <root level="WARN">
     <appender-ref ref="CONSOLE" />
