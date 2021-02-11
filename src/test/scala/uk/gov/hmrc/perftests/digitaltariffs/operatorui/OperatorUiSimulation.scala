@@ -58,7 +58,13 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
     getCaseTraderDetails,
     getActionCase,
     getReleaseToAQueue,
-    getReleaseConfirmation
+    getReleaseConfirmation,
+    getOpenCases,
+    getAssignCase,
+    getChangeCaseStatusRefer,
+    getReferCase,
+    getFileUpload,
+    getReferConfirmation
   )
 
   setup("operationalUILiability", "HMRC Operator reviews a Liability application") withRequests(

@@ -5,7 +5,7 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
 
-object OperatorUiLiabilityRequest extends DigitalTariffsPerformanceTestRunner {
+object OperatorUiCorrespondenceRequest extends DigitalTariffsPerformanceTestRunner {
 
   def getOpenLiability: HttpRequestBuilder = {
     http("Open Liability")
