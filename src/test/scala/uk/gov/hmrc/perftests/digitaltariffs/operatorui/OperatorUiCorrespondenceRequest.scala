@@ -7,97 +7,46 @@ import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
 
 object OperatorUiCorrespondenceRequest extends DigitalTariffsPerformanceTestRunner {
 
-  def getOpenLiability: HttpRequestBuilder = {
-    http("Open Liability")
-      .get(s"$operatorUiBaseUrl/all-open-cases?activeSubNav=sub_nav_liability_tab")
+
+  def getCorrespondenceCase: HttpRequestBuilder = {
+    http("Get to Correspondence")
+      .get(s"$operatorUiBaseUrl/all-open-cases?activeSubNav=sub_nav_correspondence_tab")
+      .check(status.is(200))
+      .check(css("input[name='csrfToken']", "value").saveAs("csrfToken"))
+  }
+
+  def postCreateCorrespondence:HttpRequestBuilder = {
+    http("Create Correspondence")
+      .post(s"$operatorUiBaseUrl/new-correspondence")
+      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("summary", "Case Description")
+      .formParam("source", "a trader")
+      .formParam("contactEmail", "abv@abv.com")
+      .check(status.is(200))
+      .check((regex("8[0-9]{8}").saveAs("caseRef")))
+  }
+
+  def postReleaseCorrespondenceCase: HttpRequestBuilder = {
+    http("Case released")
+      .post(operatorUiBaseUrl + "/release-correspondence-choice?reference=${caseRef}")
+      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("choice", "Yes")
       .check(status.is(200))
   }
 
-  def getNewLiability: HttpRequestBuilder = {
-    http("New liability information")
-      .get(s"$operatorUiBaseUrl/new-liability")
-      .formParam("item-name", "Unique Performance Test Liability")
-      .formParam("trader-name", "Unique PT Trader Joe")
-      .formParam("liability-status", "LIVE")
+  def postChooseReleaseTeam: HttpRequestBuilder = {
+    http("Release to a team")
+      .post(operatorUiBaseUrl + "/cases/${caseRef}/release")
+      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("queue", "flex")
       .check(status.is(200))
   }
 
-  def getLiabilityRef: HttpRequestBuilder = {
-    http("Find Valid Case Reference")
-      .get(s"$operatorUiBaseUrl/search?trader_name=Unique+PT+Trader+Joe&commodity_code=&decision_details=&keyword%5B0%5D=&addToSearch=false&application_type%5B1%5D=LIABILITY_ORDER&status%5B4%5D=NEW&selectedTab=details#advanced_search-results_and_filters")
-      .check(status.is(200))
-      .check(css("a#advanced_search_results-row-0-reference").find.saveAs("case_reference"))
-  }
-
-  def getCaseToAction: HttpRequestBuilder = {
-    http("Liability case reference ${case_reference}")
-      .get(operatorUiBaseUrl + "/cases/v2/${case_reference}/liability")
+  def getCaseReleasedConfirmation: HttpRequestBuilder ={
+    http("Case release confirmation")
+      .get(operatorUiBaseUrl + "/cases/${caseRef}/release/confirmation")
       .check(status.is(200))
   }
-
-  def getActionCase: HttpRequestBuilder = {
-    http("Action liability case ${case_reference}")
-      .get(operatorUiBaseUrl + "/cases/${case_reference}/release-or-suppress-case")
-      .formParam("caseStatus", "release")
-      .check(status.is(200))
-  }
-
-  def getReleaseToAQueue: HttpRequestBuilder = {
-    http("Choose a team to release")
-      .get(operatorUiBaseUrl + "/cases/${case_reference}/release")
-      .formParam("queue", "ACT")
-      .check(status.is(200))
-  }
-
-  def getReleaseConfirmation: HttpRequestBuilder = {
-    http("Release confirmation")
-      .get(operatorUiBaseUrl + "/cases/${case_reference}/release/confirmation")
-      .check(status.is(200))
-  }
-
-  def getOpenCases: HttpRequestBuilder = {
-    http("ATaR Open cases")
-      .get(operatorUiBaseUrl + "/all-open-cases")
-      .check(status.is(200))
-  }
-
-  def getAssignCase: HttpRequestBuilder = {
-    http("Assign a case")
-      .get(operatorUiBaseUrl + "/cases/${case_reference}/assign")
-      .check(status.is(200))
-  }
-
-  def getChangeCaseStatusRefer: HttpRequestBuilder = {
-    http("Change a case status")
-      .get(operatorUiBaseUrl + "/cases/${case_reference}/change-case-status")
-      .formParam("caseStatus", "refer")
-      .check(status.is(200))
-  }
-
-  def getReferCase: HttpRequestBuilder = {
-    http("Refer a case")
-      .get(operatorUiBaseUrl + "/cases/${case_reference}/refer")
-      .formParam("referredTo", "Laboratory analyst")
-      .formParam("note", "A note from me")
-      .formParam("email", "")
-      .check(status.is(200))
-  }
-
-  def getFileUpload: HttpRequestBuilder = {
-    val file = System.getProperty("user.dir") + "/src/test/files/FileUploadPDF.pdf"
-    http("Post Select file as success")
-      .get(operatorUiBaseUrl + "/cases/${case_reference}/refer")
-      .formUpload("fileToUpload", file)
-      .formParam("email", "Upload")
-      .check(status.is(200))
-  }
-
-  def getReferConfirmation: HttpRequestBuilder = {
-    http("Case referred")
-      .get(operatorUiBaseUrl + "/cases/${case_reference}/refer/confirmation")
-      .check(status.is(200))
-  }
-
 }
 
 

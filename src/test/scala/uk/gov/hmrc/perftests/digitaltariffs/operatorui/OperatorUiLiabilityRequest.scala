@@ -4,6 +4,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
+import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiRequests.operatorUiBaseUrl
 
 object OperatorUiLiabilityRequest extends DigitalTariffsPerformanceTestRunner {
 
