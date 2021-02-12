@@ -7,7 +7,7 @@ import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
 
 object OperatorUiRequests extends DigitalTariffsPerformanceTestRunner {
 
-  private val homePage = s"$operatorUiBaseUrl/queues/my-cases"
+  private val homePage = s"$operatorUiBaseUrl/operator-dashboard-classification"
 
   def getStartPage: HttpRequestBuilder = {
     http("Home Page")
@@ -18,7 +18,7 @@ object OperatorUiRequests extends DigitalTariffsPerformanceTestRunner {
 
   def getGatewayQueue: HttpRequestBuilder = {
     http("Gateway Queue")
-      .get(s"$operatorUiBaseUrl/queues/gateway")
+      .get(s"$operatorUiBaseUrl/gateway-cases")
       .disableFollowRedirect
       .check(status.is(200))
   }
@@ -60,7 +60,7 @@ object OperatorUiRequests extends DigitalTariffsPerformanceTestRunner {
 
   def getCaseTraderDetails: HttpRequestBuilder = {
     http(s"View Case Trader Details")
-      .get(operatorUiBaseUrl + "/cases/${case_reference}")
+      .get(operatorUiBaseUrl + "/cases/v2/${case_reference}/atar")
       .check(status.is(200))
   }
 
@@ -112,7 +112,7 @@ object OperatorUiRequests extends DigitalTariffsPerformanceTestRunner {
 
   def findValidCaseReference: HttpRequestBuilder = {
     http("Find Valid Case Reference")
-      .get(s"$operatorUiBaseUrl/search?trader_name=.*&commodity_code=&decision_details=&keyword%5B0%5D=&application_type%5B0%5D=BTI&status%5B0%5D=OPEN&status%5B1%5D=LIVE&status%5B4%5D=NEW&selectedTab=details#advanced_search-results_and_filters")
+      .get(s"$operatorUiBaseUrl/search?trader_name=.*&commodity_code=&decision_details=&keyword%5B0%5D=&application_type%5B0%5D=BTI&status%5B4%5D=NEW&selectedTab=details#advanced_search-results_and_filters")
       .check(status.is(200))
       .check(css("a#advanced_search_results-row-0-reference").find.saveAs("case_reference"))
   }
