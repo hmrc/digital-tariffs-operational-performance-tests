@@ -7,7 +7,6 @@ import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
 
 object OperatorUiMiscRequest extends DigitalTariffsPerformanceTestRunner {
 
-
   def getMiscCase: HttpRequestBuilder = {
     http("Get to Misc")
       .get(s"$operatorUiBaseUrl/all-open-cases?activeSubNav=sub_nav_miscellaneous_tab")
@@ -15,7 +14,7 @@ object OperatorUiMiscRequest extends DigitalTariffsPerformanceTestRunner {
       .check(css("input[name='csrfToken']", "value").saveAs("csrfToken"))
   }
 
-  def postCreateMisc:HttpRequestBuilder = {
+  def postCreateMisc: HttpRequestBuilder = {
     http("Create Correspondence")
       .post(s"$operatorUiBaseUrl/create-new-miscellaneous")
       .formParam("csrfToken", s"$${csrfToken}")
@@ -25,7 +24,6 @@ object OperatorUiMiscRequest extends DigitalTariffsPerformanceTestRunner {
       .check(status.is(200))
       .check((regex("8[0-9]{8}").saveAs("caseRef")))
   }
-
 }
 
 
