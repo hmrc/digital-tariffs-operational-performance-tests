@@ -32,14 +32,14 @@ trait DigitalTariffsPerformanceTestRunner extends PerformanceTestRunner with Ser
   protected val waitTime = 1.seconds
 
   protected val rate = 0.5D
-  protected val rampInterval = 1.minute  // 5.seconds
+  protected val rampInterval = 1.minute // 5.seconds
   protected val mainInterval = 8.minutes // 15.seconds
 
   protected def simulationSteps: Seq[InjectionStep] =
     Seq(
       rampUsersPerSec(0).to(rate).during(rampInterval), // growth
-      constantUsersPerSec(rate).during(mainInterval),          // constant
-      rampUsersPerSec(rate).to(0).during(rampInterval)  // shutting down
+      constantUsersPerSec(rate).during(mainInterval), // constant
+      rampUsersPerSec(rate).to(0).during(rampInterval) // shutting down
     )
 
   protected def simulationAssertion: Seq[Assertion] =

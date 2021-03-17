@@ -4,7 +4,6 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
-import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiRequests.operatorUiBaseUrl
 
 object OperatorUiLiabilityRequest extends DigitalTariffsPerformanceTestRunner {
 
@@ -25,7 +24,7 @@ object OperatorUiLiabilityRequest extends DigitalTariffsPerformanceTestRunner {
 
   def getLiabilityRef: HttpRequestBuilder = {
     http("Find Valid Case Reference")
-      .get(s"$operatorUiBaseUrl/search?trader_name=Unique+PT+Trader+Joe&commodity_code=&decision_details=&keyword%5B0%5D=&addToSearch=false&application_type%5B1%5D=LIABILITY_ORDER&status%5B4%5D=NEW&selectedTab=details#advanced_search-results_and_filters")
+      .get(s"$operatorUiBaseUrl/search?case_source=.*&commodity_code=&decision_details=&keyword%5B0%5D=&addToSearch=false&application_type%5B1%5D=LIABILITY_ORDER&status%5B4%5D=NEW&selectedTab=details#advanced_search-results_and_filters")
       .check(status.is(200))
       .check(css("a#advanced_search_results-row-0-reference").find.saveAs("case_reference"))
   }
@@ -98,7 +97,6 @@ object OperatorUiLiabilityRequest extends DigitalTariffsPerformanceTestRunner {
       .get(operatorUiBaseUrl + "/cases/${case_reference}/refer/confirmation")
       .check(status.is(200))
   }
-
 }
 
 

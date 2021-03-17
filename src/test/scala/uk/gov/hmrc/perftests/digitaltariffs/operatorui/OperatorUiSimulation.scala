@@ -3,7 +3,7 @@ package uk.gov.hmrc.perftests.digitaltariffs.operatorui
 import io.gatling.http.protocol.HttpProtocolBuilder
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
-import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiCorrespondenceRequest.{getCaseReleasedConfirmation, getCorrespondenceCase, postChooseReleaseTeam, postCreateCorrespondence, postReleaseCorrespondenceCase}
+import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiCorrespondenceRequest._
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiLiabilityRequest._
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiMiscRequest.{getMiscCase, postCreateMisc}
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiRequests._
@@ -69,7 +69,6 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
     getSignInRedirect,
     postIdpResponseToStride,
     // HMRC Operator UI journey
-
     getStartPage,
     getCorrespondenceCase,
     postCreateCorrespondence,
@@ -77,7 +76,6 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
     postChooseReleaseTeam,
     getCaseReleasedConfirmation
   )
-
 
   setup("OperationalUIMisc", "HMRC Operator creates a Misc case") withRequests(
     // Stride Auth Sign In
@@ -88,15 +86,12 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
     getSignInRedirect,
     postIdpResponseToStride,
     // HMRC Operator UI journey
-
     getStartPage,
     getMiscCase,
     postCreateMisc,
     postChooseReleaseTeam,
     getCaseReleasedConfirmation
-
   )
 
   runSimulation()
-
 }

@@ -7,7 +7,6 @@ import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
 
 object OperatorUiCorrespondenceRequest extends DigitalTariffsPerformanceTestRunner {
 
-
   def getCorrespondenceCase: HttpRequestBuilder = {
     http("Get to Correspondence")
       .get(s"$operatorUiBaseUrl/all-open-cases?activeSubNav=sub_nav_correspondence_tab")
