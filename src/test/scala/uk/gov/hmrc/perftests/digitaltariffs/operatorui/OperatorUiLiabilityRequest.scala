@@ -76,19 +76,18 @@ object OperatorUiLiabilityRequest extends DigitalTariffsPerformanceTestRunner {
 
   def getReferCase: HttpRequestBuilder = {
     http("Refer a case")
-      .get(operatorUiBaseUrl + "/cases/${case_reference}/refer")
+      .get(operatorUiBaseUrl + "/cases/${case_reference}/refer-reason")
       .formParam("referredTo", "Laboratory analyst")
       .formParam("note", "A note from me")
-      .formParam("email", "")
       .check(status.is(200))
   }
 
   def getFileUpload: HttpRequestBuilder = {
     val file = System.getProperty("user.dir") + "/src/test/files/FileUploadPDF.pdf"
     http("Post Select file as success")
-      .get(operatorUiBaseUrl + "/cases/${case_reference}/refer")
+      .get(operatorUiBaseUrl + "/cases/${case_reference}/refer-email")
       .formUpload("fileToUpload", file)
-      .formParam("email", "Upload")
+      .formParam("file", "Upload")
       .check(status.is(200))
   }
 
