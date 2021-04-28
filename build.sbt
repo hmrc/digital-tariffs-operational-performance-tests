@@ -22,4 +22,5 @@ enablePlugins(GatlingPlugin)
 
 parallelExecution in Test := false
 
-resolvers := Seq(Resolver.bintrayRepo("hmrc", "releases"))
+resolvers += "hmrc-releases" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases/"
+
