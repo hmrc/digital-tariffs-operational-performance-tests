@@ -1,7 +1,7 @@
 package uk.gov.hmrc.perftests.digitaltariffs
 
 import io.gatling.core.Predef._
-import io.gatling.core.controller.inject.InjectionStep
+import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.http.Predef.http
 import io.gatling.http.protocol.HttpProtocolBuilder
 import uk.gov.hmrc.performance.conf.ServicesConfiguration
@@ -15,7 +15,7 @@ trait DigitalTariffsPerformanceTestRunner extends PerformanceTestRunner with Ser
     http
       .userAgentHeader("DigitalTariffs-PerformanceTests")
       .connectionHeader("close")
-      .baseURL(url)
+      .baseUrl(url)
   }
 
   protected val adminBaseUrl = "https://admin.staging.tax.service.gov.uk"
@@ -35,7 +35,7 @@ trait DigitalTariffsPerformanceTestRunner extends PerformanceTestRunner with Ser
   protected val rampInterval = 1.minute // 5.seconds
   protected val mainInterval = 8.minutes // 15.seconds
 
-  protected def simulationSteps: Seq[InjectionStep] =
+  protected def simulationSteps: Seq[OpenInjectionStep] =
     Seq(
       rampUsersPerSec(0).to(rate).during(rampInterval), // growth
       constantUsersPerSec(rate).during(mainInterval), // constant

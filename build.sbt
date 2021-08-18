@@ -1,21 +1,20 @@
-import io.gatling.sbt.GatlingPlugin
-
 
 name := "digital-tariffs-operational-performance-tests"
 
 version := "1.0"
 
-scalaVersion := "2.11.11"
+scalaVersion := "2.12.14"
 
-val gatlingVersion = "2.2.5"
+val gatlingVersion = "3.4.2"
 
-libraryDependencies ++= Seq("io.gatling" % "gatling-core" % "2.2.5",
-  "com.github.nscala-time" %% "nscala-time" % "2.22.0",
-  "com.typesafe" % "config" % "1.3.3",
-  "com.typesafe.play" % "play-json_2.11" % "2.4.3",
-  "io.gatling.highcharts" % "gatling-charts-highcharts" % gatlingVersion,
-  "io.gatling" % "gatling-test-framework" % gatlingVersion,
-  "uk.gov.hmrc" %% "performance-test-runner" % "3.3.0"
+
+libraryDependencies ++= Seq(
+  "com.github.nscala-time" %% "nscala-time"               % "2.28.0",
+  "com.typesafe"           %  "config"                    % "1.3.3",
+  "com.typesafe.play"      %% "play-json"                 % "2.6.10",
+  "io.gatling.highcharts"  %  "gatling-charts-highcharts" % gatlingVersion % Test,
+  "io.gatling"             %  "gatling-test-framework"    % gatlingVersion % Test,
+  "uk.gov.hmrc"            %% "performance-test-runner"   % "4.11.0"
 )
 
 enablePlugins(GatlingPlugin)
