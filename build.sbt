@@ -1,26 +1,15 @@
-import io.gatling.sbt.GatlingPlugin
 
-
-name := "digital-tariffs-operational-performance-tests"
-
-version := "1.0"
-
-scalaVersion := "2.11.11"
-
-val gatlingVersion = "2.2.5"
-
-libraryDependencies ++= Seq("io.gatling" % "gatling-core" % "2.2.5",
-  "com.github.nscala-time" %% "nscala-time" % "2.22.0",
-  "com.typesafe" % "config" % "1.3.3",
-  "com.typesafe.play" % "play-json_2.11" % "2.4.3",
-  "io.gatling.highcharts" % "gatling-charts-highcharts" % gatlingVersion,
-  "io.gatling" % "gatling-test-framework" % gatlingVersion,
-  "uk.gov.hmrc" %% "performance-test-runner" % "3.3.0"
-)
-
-enablePlugins(GatlingPlugin)
-
-parallelExecution in Test := false
-
-resolvers += "hmrc-releases" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases/"
-
+lazy val root = (project in file("."))
+  .enablePlugins(GatlingPlugin)
+  .settings(
+    name := "digital-tariffs-operational-performance-tests",
+    version := "0.1.0-SNAPSHOT",
+    scalaVersion := "2.12.14",
+    //implicitConversions & postfixOps are Gatling recommended -language settings
+    scalacOptions ++= Seq("-feature", "-language:implicitConversions", "-language:postfixOps"),
+    // Enabling sbt-auto-build plugin provides DefaultBuildSettings with default `testOptions` from `sbt-settings` plugin.
+    // These testOptions are not compatible with `sbt gatling:test`. So we have to override testOptions here.
+    testOptions in Test := Seq.empty,
+    libraryDependencies ++= Dependencies.test,
+    resolvers += "hmrc-releases" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases/"
+  )
