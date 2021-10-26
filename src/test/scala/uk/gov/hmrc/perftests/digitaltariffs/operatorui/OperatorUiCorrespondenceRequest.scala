@@ -11,10 +11,10 @@ object OperatorUiCorrespondenceRequest extends DigitalTariffsPerformanceTestRunn
     http("Get to Correspondence")
       .get(s"$operatorUiBaseUrl/all-open-cases?activeSubNav=sub_nav_correspondence_tab")
       .check(status.is(200))
-      .check(css("input[name='csrfToken']", "value").saveAs("csrfToken"))
+      .check(saveCsrfToken)
   }
 
-  def postCreateCorrespondence:HttpRequestBuilder = {
+  def postCreateCorrespondence: HttpRequestBuilder = {
     http("Create Correspondence")
       .post(s"$operatorUiBaseUrl/new-correspondence")
       .formParam("csrfToken", s"$${csrfToken}")
@@ -22,7 +22,7 @@ object OperatorUiCorrespondenceRequest extends DigitalTariffsPerformanceTestRunn
       .formParam("source", "a trader")
       .formParam("contactEmail", "abv@abv.com")
       .check(status.is(200))
-      .check((regex("8[0-9]{8}").saveAs("caseRef")))
+      .check(regex("Correspondence case (8[0-9]{8})").saveAs("caseRef"))
   }
 
   def postReleaseCorrespondenceCase: HttpRequestBuilder = {
@@ -41,7 +41,7 @@ object OperatorUiCorrespondenceRequest extends DigitalTariffsPerformanceTestRunn
       .check(status.is(200))
   }
 
-  def getCaseReleasedConfirmation: HttpRequestBuilder ={
+  def getCaseReleasedConfirmation: HttpRequestBuilder = {
     http("Case release confirmation")
       .get(operatorUiBaseUrl + "/cases/${caseRef}/release/confirmation")
       .check(status.is(200))

@@ -14,8 +14,16 @@ object OperatorUiLiabilityRequest extends DigitalTariffsPerformanceTestRunner {
   }
 
   def getNewLiability: HttpRequestBuilder = {
-    http("New liability information")
+    http("Get-New liability information")
       .get(s"$operatorUiBaseUrl/new-liability")
+      .check(status.is(200))
+      .check(saveCsrfToken)
+  }
+
+  def postNewLiability: HttpRequestBuilder = {
+    http("Post-New liability information")
+      .post(s"$operatorUiBaseUrl/new-liability")
+      .formParam("csrfToken", s"$${csrfToken}")
       .formParam("item-name", "Unique Performance Test Liability")
       .formParam("trader-name", "Unique PT Trader Joe")
       .formParam("liability-status", "LIVE")

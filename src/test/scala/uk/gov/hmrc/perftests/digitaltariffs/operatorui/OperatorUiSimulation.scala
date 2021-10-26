@@ -3,11 +3,13 @@ package uk.gov.hmrc.perftests.digitaltariffs.operatorui
 import io.gatling.http.protocol.HttpProtocolBuilder
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
+import uk.gov.hmrc.perftests.digitaltariffs.operatorui.AuthRequests._
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiCorrespondenceRequest._
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiLiabilityRequest._
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiMiscRequest.{getMiscCase, postCreateMisc}
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiRequests._
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.StrideAuthRequests._
+import uk.gov.hmrc.perftests.digitaltariffs.operatorui.TraderUiRequests._
 
 class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerformanceTestRunner {
 
@@ -15,6 +17,25 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
     buildHttpProtocol(url = adminBaseUrl)
   }
   setup("OperationalUIATaR", "HMRC Operator refers a ATaR Case") withRequests(
+    //Create ATaR Case
+    getGovGatewaySignIn,
+    postGovGatewaySignIn,
+    getTraderStartPage,
+    getInformationYouNeed,
+    getInformationMadePublic,
+    getGoodsName,
+    postGoodsName,
+    postGoodsDescription,
+    postConfidentialInfo,
+    postUploadSupportingDocument,
+    postAreYouSendingASample,
+    postHaveYouFoundCommodityCode,
+    postLegalChallenge,
+    postPreviousRulingReference,
+    postSimilarRuling,
+    postRegisterForEori,
+    postEnterContactDetails,
+    postCheckYourAnswers,
     // Stride Auth Sign In
     getProtectedPageNoSession,
     getStrideSignIn,
@@ -50,6 +71,7 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
     getStartPage,
     getOpenLiability,
     getNewLiability,
+    postNewLiability,
     getLiabilityRef,
     getCaseToAction,
     getActionCase,

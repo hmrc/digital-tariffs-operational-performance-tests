@@ -11,7 +11,7 @@ object OperatorUiMiscRequest extends DigitalTariffsPerformanceTestRunner {
     http("Get to Misc")
       .get(s"$operatorUiBaseUrl/all-open-cases?activeSubNav=sub_nav_miscellaneous_tab")
       .check(status.is(200))
-      .check(css("input[name='csrfToken']", "value").saveAs("csrfToken"))
+      .check(saveCsrfToken)
   }
 
   def postCreateMisc: HttpRequestBuilder = {
@@ -22,7 +22,7 @@ object OperatorUiMiscRequest extends DigitalTariffsPerformanceTestRunner {
       .formParam("contactName", "Contact Name")
       .formParam("caseType", "IB")
       .check(status.is(200))
-      .check((regex("8[0-9]{8}").saveAs("caseRef")))
+      .check(regex("Miscellaneous case (8[0-9]{8})").saveAs("caseRef"))
   }
 }
 
