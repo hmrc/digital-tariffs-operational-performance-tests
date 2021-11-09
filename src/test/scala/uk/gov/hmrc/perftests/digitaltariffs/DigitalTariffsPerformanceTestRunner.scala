@@ -20,10 +20,10 @@ trait DigitalTariffsPerformanceTestRunner extends PerformanceTestRunner with Ser
       .baseUrl(url)
   }
 
-  protected val adminBaseUrl = "https://admin.staging.tax.service.gov.uk"
+  protected val adminBaseUrl = baseUrlFor("tariff-classification-frontend")
   protected val authStubBaseUrl: String = baseUrlFor("auth-login-stub") + "/auth-login-stub"
   protected val traderUiBaseUrl: String = baseUrlFor("binding-tariff-trader-frontend") + "/advance-tariff-application"
-  protected val operatorUiBaseUrl = s"$adminBaseUrl/manage-tariff-classifications"
+  protected val operatorUiBaseUrl = baseUrlFor("tariff-classification-frontend") + "/manage-tariff-classifications"
 
   protected val eoriNumber = "AA000111222"
 
