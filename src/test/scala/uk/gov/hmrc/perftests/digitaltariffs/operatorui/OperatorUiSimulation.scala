@@ -1,5 +1,8 @@
 package uk.gov.hmrc.perftests.digitaltariffs.operatorui
 
+import io.gatling.core.Predef.exec
+import io.gatling.core.action.builder.ActionBuilder
+import io.gatling.http.Predef.flushCookieJar
 import io.gatling.http.protocol.HttpProtocolBuilder
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
@@ -16,7 +19,12 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
   override val httpProtocol: HttpProtocolBuilder = {
     buildHttpProtocol(url = adminBaseUrl)
   }
-  setup("OperationalUIATaR", "HMRC Operator refers a ATaR Case") withRequests(
+
+  val flushAllCookies: ActionBuilder = {
+    exec(flushCookieJar)
+  }.actionBuilders.head
+
+  setup("OperationalUIATaR", "HMRC Operator refers a ATaR Case") withActions(
     //Create ATaR Case
     getGovGatewaySignIn,
     postGovGatewaySignIn,
@@ -36,6 +44,7 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
     postRegisterForEori,
     postEnterContactDetails,
     postCheckYourAnswers,
+    flushAllCookies,
     // Stride Auth Sign In
     getProtectedPageNoSession,
     getStrideSignIn,
