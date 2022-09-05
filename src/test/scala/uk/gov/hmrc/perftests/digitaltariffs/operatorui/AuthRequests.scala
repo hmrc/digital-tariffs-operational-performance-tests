@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,17 +19,17 @@ package uk.gov.hmrc.perftests.digitaltariffs.operatorui
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
+import io.netty.handler.codec.http.HttpResponseStatus
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
 
 object AuthRequests extends DigitalTariffsPerformanceTestRunner {
 
-  def getGovGatewaySignIn: HttpRequestBuilder = {
+  def getGovGatewaySignIn: HttpRequestBuilder =
     http("Government Gateway Sign In - GET")
       .get(s"$authStubBaseUrl/gg-sign-in")
-      .check(status.is(200))
-  }
+      .check(status.is(HttpResponseStatus.OK.code()))
 
-  def postGovGatewaySignIn: HttpRequestBuilder = {
+  def postGovGatewaySignIn: HttpRequestBuilder =
     http("Government Gateway Sign In - POST")
       .post(s"$authStubBaseUrl/gg-sign-in")
       .formParam("authorityId", "")
@@ -43,6 +43,5 @@ object AuthRequests extends DigitalTariffsPerformanceTestRunner {
       .formParam("enrolment[0].taxIdentifier[0].name", "EORINumber")
       .formParam("enrolment[0].taxIdentifier[0].value", eoriNumber)
       .formParam("enrolment[0].state", "Activated")
-      .check(status.is(200))
-  }
+      .check(status.is(HttpResponseStatus.OK.code()))
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,27 +19,24 @@ package uk.gov.hmrc.perftests.digitaltariffs.operatorui
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
+import io.netty.handler.codec.http.HttpResponseStatus
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
 
 object OperatorUiMiscRequest extends DigitalTariffsPerformanceTestRunner {
 
-  def getMiscCase: HttpRequestBuilder = {
+  def getMiscCase: HttpRequestBuilder =
     http("Get to Misc")
       .get(s"$operatorUiBaseUrl/all-open-cases?activeSubNav=sub_nav_miscellaneous_tab")
-      .check(status.is(200))
+      .check(status.is(HttpResponseStatus.OK.code()))
       .check(saveCsrfToken)
-  }
 
-  def postCreateMisc: HttpRequestBuilder = {
+  def postCreateMisc: HttpRequestBuilder =
     http("Create Correspondence")
       .post(s"$operatorUiBaseUrl/create-new-miscellaneous")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("name", "Misc Description")
       .formParam("contactName", "Contact Name")
       .formParam("caseType", "IB")
-      .check(status.is(200))
+      .check(status.is(HttpResponseStatus.OK.code()))
       .check(regex("Miscellaneous case (8[0-9]{8})").saveAs("caseRef"))
-  }
 }
-
-
