@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,23 +29,23 @@ import scala.concurrent.duration._
 
 trait DigitalTariffsPerformanceTestRunner extends PerformanceTestRunner with ServicesConfiguration {
 
-  protected def buildHttpProtocol(url: String): HttpProtocolBuilder = {
+  protected def buildHttpProtocol(url: String): HttpProtocolBuilder =
     http
       .userAgentHeader("DigitalTariffs-PerformanceTests")
       .connectionHeader("close")
       .baseUrl(url)
-  }
 
-  protected val adminBaseUrl: String = baseUrlFor("tariff-classification-frontend")
-  protected val authStubBaseUrl: String = baseUrlFor("auth-login-stub") + "/auth-login-stub"
-  protected val traderUiBaseUrl: String = baseUrlFor("binding-tariff-trader-frontend") + "/advance-tariff-application"
-  protected val operatorUiBaseUrl: String = baseUrlFor("tariff-classification-frontend") + "/manage-tariff-classifications"
+  protected val adminBaseUrl: String      = baseUrlFor("tariff-classification-frontend")
+  protected val authStubBaseUrl: String   = baseUrlFor("auth-login-stub") + "/auth-login-stub"
+  protected val traderUiBaseUrl: String   = baseUrlFor("binding-tariff-trader-frontend") + "/advance-tariff-application"
+  protected val operatorUiBaseUrl: String =
+    baseUrlFor("tariff-classification-frontend") + "/manage-tariff-classifications"
 
   protected val eoriNumber = "AA000111222"
 
   protected val waitTime: FiniteDuration = 1.seconds
 
-  protected val rate = 0.5D
+  protected val rate                         = 0.5d
   protected val rampInterval: FiniteDuration = 1.minute // 5.seconds
   protected val mainInterval: FiniteDuration = 8.minutes // 15.seconds
 
@@ -61,9 +61,8 @@ trait DigitalTariffsPerformanceTestRunner extends PerformanceTestRunner with Ser
       global.successfulRequests.percent.gte(99.0)
     )
 
-  def saveCsrfToken: CheckBuilder[RegexCheckType, String, String] = {
+  def saveCsrfToken: CheckBuilder[RegexCheckType, String, String] =
     regex(_ => csrfPattern).saveAs("csrfToken")
-  }
 
   private val csrfPattern = """<input type="hidden" name="csrfToken" value="([^"]+)"""
 
