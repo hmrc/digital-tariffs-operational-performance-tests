@@ -19,85 +19,107 @@ package uk.gov.hmrc.perftests.digitaltariffs.operatorui
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import io.netty.handler.codec.http.HttpResponseStatus
+import io.netty.handler.codec.http.HttpResponseStatus._
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
 
 object OperatorUiLiabilityRequest extends DigitalTariffsPerformanceTestRunner {
 
   def getOpenLiability: HttpRequestBuilder =
-    http("Open Liability")
+    http("GET Open Liability")
       .get(s"$operatorUiBaseUrl/all-open-cases?activeSubNav=sub_nav_liability_tab")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
+      .check(saveCsrfToken)
 
   def getNewLiability: HttpRequestBuilder =
-    http("Get-New liability information")
+    http("GET New liability information")
       .get(s"$operatorUiBaseUrl/new-liability")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postNewLiability: HttpRequestBuilder =
-    http("Post-New liability information")
+    http("POST Post-New liability information")
       .post(s"$operatorUiBaseUrl/new-liability")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("item-name", "Unique Performance Test Liability")
       .formParam("trader-name", "Unique PT Trader Joe")
       .formParam("liability-status", "LIVE")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(SEE_OTHER.code()))
 
   def getLiabilityRef: HttpRequestBuilder =
-    http("Find Valid Case Reference")
+    http("GET Find Valid Case Reference")
       .get(
         s"$operatorUiBaseUrl/search?case_source=.*&commodity_code=&decision_details=&keyword%5B0%5D=" +
           s"&addToSearch=false&application_type%5B1%5D=LIABILITY_ORDER&status%5B4%5D=NEW" +
           s"&selectedTab=details#advanced_search-results_and_filters"
       )
-      .check(status.is(HttpResponseStatus.OK.code()))
-      .check(css("a#advanced_search_results-row-0-reference").find.saveAs("case_reference"))
+      .check(status.is(OK.code()))
+      .check(saveCsrfToken)
+      .check(css("#advanced_search_results-row-0-reference-link").find.saveAs("case_reference"))
 
   def getCaseToAction: HttpRequestBuilder =
-    http("Liability case reference ${case_reference}")
+    http("GET Liability case reference ${case_reference}")
       .get(operatorUiBaseUrl + "/cases/v2/${case_reference}/liability")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
+      .check(saveCsrfToken)
 
   def getActionCase: HttpRequestBuilder =
-    http("Action liability case ${case_reference}")
+    http("GET Action liability case ${case_reference}")
       .get(operatorUiBaseUrl + "/cases/${case_reference}/release-or-suppress-case")
+      .check(status.is(OK.code()))
+      .check(saveCsrfToken)
+
+  def postActionCase: HttpRequestBuilder =
+    http("POST Action liability case ${case_reference}")
+      .post(operatorUiBaseUrl + "/cases/${case_reference}/release-or-suppress-case")
+      .formParam("csrfToken", s"$${csrfToken}")
       .formParam("caseStatus", "release")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(SEE_OTHER.code()))
 
   def getReleaseToAQueue: HttpRequestBuilder =
-    http("Choose a team to release")
+    http("GET Choose a team to release")
       .get(operatorUiBaseUrl + "/cases/${case_reference}/release")
-      .formParam("queue", "ACT")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
+      .check(saveCsrfToken)
+
+  def postReleaseToAQueue: HttpRequestBuilder =
+    http("POST Choose a team to release")
+      .post(operatorUiBaseUrl + "/cases/${case_reference}/release")
+      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("queue", "act")
+      .check(status.is(SEE_OTHER.code()))
 
   def getReleaseConfirmation: HttpRequestBuilder =
-    http("Release confirmation")
+    http("GET Release confirmation")
       .get(operatorUiBaseUrl + "/cases/${case_reference}/release/confirmation")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
+      .check(saveCsrfToken)
 
   def getOpenCases: HttpRequestBuilder =
-    http("ATaR Open cases")
+    http("GET ATaR Open cases")
       .get(operatorUiBaseUrl + "/all-open-cases")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
+      .check(saveCsrfToken)
 
   def getAssignCase: HttpRequestBuilder =
-    http("Assign a case")
+    http("GET Assign a case")
       .get(operatorUiBaseUrl + "/cases/${case_reference}/assign")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
+      .check(saveCsrfToken)
 
   def getChangeCaseStatusRefer: HttpRequestBuilder =
-    http("Change a case status")
+    http("GET Change a case status")
       .get(operatorUiBaseUrl + "/cases/${case_reference}/change-case-status")
       .formParam("caseStatus", "refer")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
+      .check(saveCsrfToken)
 
   def getReferCase: HttpRequestBuilder =
-    http("Refer a case")
+    http("GET Refer a case")
       .get(operatorUiBaseUrl + "/cases/${case_reference}/refer-reason")
       .formParam("referredTo", "Laboratory analyst")
       .formParam("note", "A note from me")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
+      .check(saveCsrfToken)
 
   def getFileUpload: HttpRequestBuilder = {
     val file = System.getProperty("user.dir") + "/src/test/files/FileUploadPDF.pdf"
@@ -105,11 +127,13 @@ object OperatorUiLiabilityRequest extends DigitalTariffsPerformanceTestRunner {
       .get(operatorUiBaseUrl + "/cases/${case_reference}/refer-email")
       .formUpload("fileToUpload", file)
       .formParam("file", "Upload")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
+      .check(saveCsrfToken)
   }
 
   def getReferConfirmation: HttpRequestBuilder =
     http("Case referred")
       .get(operatorUiBaseUrl + "/cases/${case_reference}/refer/confirmation")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
+      .check(saveCsrfToken)
 }

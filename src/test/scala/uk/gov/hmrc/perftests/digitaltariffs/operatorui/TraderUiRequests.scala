@@ -19,7 +19,7 @@ package uk.gov.hmrc.perftests.digitaltariffs.operatorui
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import io.netty.handler.codec.http.HttpResponseStatus
+import io.netty.handler.codec.http.HttpResponseStatus._
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
 
 object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
@@ -29,23 +29,23 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
   def getTraderStartPage: HttpRequestBuilder =
     http("Get start")
       .get(traderUiBaseUrl)
-      .check(status.is(HttpResponseStatus.OK.code()))
-      .check(currentLocation.is(homePage))
+      .check(status.is(OK.code()))
+      .check(header("Location").is(homePage))
 
   def getInformationYouNeed: HttpRequestBuilder =
     http("Information you need to apply for a ruling")
       .get(s"$traderUiBaseUrl/information-you-need")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
 
   def getInformationMadePublic: HttpRequestBuilder =
     http("Some of the information you provide")
       .get(s"$traderUiBaseUrl/information-may-be-made-public")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
 
   def getGoodsName: HttpRequestBuilder =
     http("Provide a name for the goods")
       .get(s"$traderUiBaseUrl/provide-goods-name")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postGoodsName: HttpRequestBuilder =
@@ -53,7 +53,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
       .post(s"$traderUiBaseUrl/provide-goods-name")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("goodsName", "Snow man jacket")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postGoodsDescription: HttpRequestBuilder =
@@ -61,7 +61,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
       .post(s"$traderUiBaseUrl/provide-goods-description")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("goodsDescription", "Snow man jacket in black colour")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postConfidentialInfo: HttpRequestBuilder =
@@ -69,7 +69,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
       .post(s"$traderUiBaseUrl/add-confidential-information")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("value", "false")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postUploadSupportingDocument: HttpRequestBuilder =
@@ -77,7 +77,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
       .post(s"$traderUiBaseUrl/add-supporting-documents")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("value", "false") // for simplicity we do not send files in Jenkins
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postAreYouSendingASample: HttpRequestBuilder =
@@ -85,7 +85,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
       .post(s"$traderUiBaseUrl/are-you-sending-samples")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("value", "false")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postHaveYouFoundCommodityCode: HttpRequestBuilder =
@@ -93,7 +93,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
       .post(s"$traderUiBaseUrl/have-you-found-commodity-code")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("value", "false")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postLegalChallenge: HttpRequestBuilder =
@@ -101,7 +101,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
       .post(s"$traderUiBaseUrl/any-legal-challenges-classifying-goods")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("value", "false")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postPreviousRulingReference: HttpRequestBuilder =
@@ -109,7 +109,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
       .post(s"$traderUiBaseUrl/previous-ruling-reference")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("value", "false")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postSimilarRuling: HttpRequestBuilder =
@@ -117,7 +117,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
       .post(s"$traderUiBaseUrl/ruling-on-similar-goods")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("value", "false")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postRegisterForEori: HttpRequestBuilder =
@@ -130,7 +130,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
       .formParam("townOrCity", "Shipley")
       .formParam("postcode", "LS10 6HT")
       .formParam("country", "GB")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postEnterContactDetails: HttpRequestBuilder =
@@ -140,12 +140,12 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
       .formParam("name", "Joe Bloggs")
       .formParam("email", "joe.bloggs@example.sh")
       .formParam("phoneNumber", "0123456789")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postCheckYourAnswers: HttpRequestBuilder =
     http("Check Your Answers")
       .post(s"$traderUiBaseUrl/check-your-answers")
       .formParam("csrfToken", s"$${csrfToken}")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
 }
