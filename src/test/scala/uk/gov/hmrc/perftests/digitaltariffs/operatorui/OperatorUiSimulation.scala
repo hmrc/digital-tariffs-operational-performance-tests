@@ -35,7 +35,7 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
   override val httpProtocol: HttpProtocolBuilder =
     buildHttpProtocol(url = adminBaseUrl)
 
-  val flushAllCookies: ActionBuilder =
+  lazy val flushAllCookies: ActionBuilder =
     exec(flushCookieJar).actionBuilders.head
 
   setup("OperationalUIATaR", "HMRC Operator refers a ATaR Case") withActions (
@@ -58,7 +58,7 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
     postRegisterForEori,
     postEnterContactDetails,
     postCheckYourAnswers,
-    flushAllCookies,
+//    flushAllCookies,
     // Stride Auth Sign In
     getProtectedPageNoSession,
     getStrideSignIn,
