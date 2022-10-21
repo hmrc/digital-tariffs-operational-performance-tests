@@ -41,7 +41,8 @@ object StrideAuthRequests extends DigitalTariffsPerformanceTestRunner {
   val getStrideSignIn: HttpRequestBuilder =
     if (!runLocal) {
       http("Stride Auth - [GET] redirect to STRIDE Auth")
-        .get(s"${baseUrlFor("tariff-classification-frontend")}" + s"$${protectedPageRedirect}")
+//        .get(s"${baseUrlFor("tariff-classification-frontend")}" + s"$${protectedPageRedirect}")
+        .get(s"$operatorUiBaseUrl")
         .disableFollowRedirect
         .check(status.is(HttpResponseStatus.SEE_OTHER.code()))
         .check(header("location").saveAs("authRequestRedirect"))

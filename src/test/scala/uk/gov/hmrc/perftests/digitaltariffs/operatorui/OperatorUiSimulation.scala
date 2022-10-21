@@ -58,9 +58,9 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
     postRegisterForEori,
     postEnterContactDetails,
     postCheckYourAnswers,
-//    flushAllCookies,
+    flushAllCookies,
     // Stride Auth Sign In
-    getProtectedPageNoSession,
+//    getProtectedPageNoSession,
     getStrideSignIn,
     getIdpSignInPage,
     postIdpSignInPage,
@@ -84,7 +84,7 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
 
   setup("OperationalUILiability", "HMRC Operator reviews a Liability application") withRequests (
     // Stride Auth Sign In
-    getProtectedPageNoSession,
+//    getProtectedPageNoSession,
     getStrideSignIn,
     getIdpSignInPage,
     postIdpSignInPage,
@@ -107,7 +107,7 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
 
   setup("OperationalUICorrespondence", "HMRC Operator creates a Correspondence case") withRequests (
     // Stride Auth Sign In
-    getProtectedPageNoSession,
+//    getProtectedPageNoSession,
     getStrideSignIn,
     getIdpSignInPage,
     postIdpSignInPage,
@@ -124,7 +124,7 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
 
   setup("OperationalUIMisc", "HMRC Operator creates a Misc case") withRequests (
     // Stride Auth Sign In
-    getProtectedPageNoSession,
+//    getProtectedPageNoSession,
     getStrideSignIn,
     getIdpSignInPage,
     postIdpSignInPage,
