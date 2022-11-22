@@ -31,6 +31,10 @@ object StrideAuthRequests extends DigitalTariffsPerformanceTestRunner {
 
   private def savePageItem(name: String, pattern: String) = regex(_ => pattern).saveAs(name)
 
+  val removeCookies = {
+    flushCookieJar
+  }
+
   val getProtectedPageNoSession: HttpRequestBuilder =
     http("Stride Auth - [GET] page without session")
       .get(s"$operatorUiBaseUrl/operator-dashboard-classification")

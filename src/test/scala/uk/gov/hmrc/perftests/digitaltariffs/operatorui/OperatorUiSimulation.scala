@@ -35,10 +35,7 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
   override val httpProtocol: HttpProtocolBuilder =
     buildHttpProtocol(url = adminBaseUrl)
 
-  val flushAllCookies: ActionBuilder =
-    exec(flushCookieJar).actionBuilders.head
-
-  setup("OperationalUIATaR", "HMRC Operator refers a ATaR Case") withActions (
+  setup("OperationalUIATaR", "HMRC Operator refers a ATaR Case").withRequests(
     //Create ATaR Case
     getGovGatewaySignIn,
     postGovGatewaySignIn,
@@ -58,7 +55,7 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
     postRegisterForEori,
     postEnterContactDetails,
     postCheckYourAnswers,
-    flushAllCookies,
+    //    flushAllCookies,
     // Stride Auth Sign In
     getProtectedPageNoSession,
     getStrideSignIn,
@@ -82,7 +79,7 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
     getReferConfirmation
   )
 
-  setup("OperationalUILiability", "HMRC Operator reviews a Liability application") withRequests (
+  setup("OperationalUILiability", "HMRC Operator reviews a Liability application") withRequests(
     // Stride Auth Sign In
     getProtectedPageNoSession,
     getStrideSignIn,
@@ -105,7 +102,7 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
     getCaseToAction
   )
 
-  setup("OperationalUICorrespondence", "HMRC Operator creates a Correspondence case") withRequests (
+  setup("OperationalUICorrespondence", "HMRC Operator creates a Correspondence case") withRequests(
     // Stride Auth Sign In
     getProtectedPageNoSession,
     getStrideSignIn,
@@ -122,7 +119,7 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
     getCaseReleasedConfirmation
   )
 
-  setup("OperationalUIMisc", "HMRC Operator creates a Misc case") withRequests (
+  setup("OperationalUIMisc", "HMRC Operator creates a Misc case") withRequests(
     // Stride Auth Sign In
     getProtectedPageNoSession,
     getStrideSignIn,
