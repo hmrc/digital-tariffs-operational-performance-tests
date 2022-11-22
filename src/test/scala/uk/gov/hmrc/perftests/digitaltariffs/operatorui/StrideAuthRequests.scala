@@ -32,7 +32,7 @@ object StrideAuthRequests extends DigitalTariffsPerformanceTestRunner {
   private def savePageItem(name: String, pattern: String) = regex(_ => pattern).saveAs(name)
 
   val removeCookies = {
-    flushCookieJar
+    exec(flushCookieJar)
   }
 
   val getProtectedPageNoSession: HttpRequestBuilder =
