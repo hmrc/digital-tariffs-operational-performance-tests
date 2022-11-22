@@ -33,7 +33,7 @@ object StrideAuthRequests extends DigitalTariffsPerformanceTestRunner {
 
   val getProtectedPageNoSession: HttpRequestBuilder =
     http("Stride Auth - [GET] page without session")
-      .get(s"$operatorUiBaseUrl")
+      .get(s"$operatorUiBaseUrl/operator-dashboard-classification")
       .disableFollowRedirect
       .check(status.is(HttpResponseStatus.SEE_OTHER.code()))
       .check(header("location").saveAs("protectedPageRedirect"))
