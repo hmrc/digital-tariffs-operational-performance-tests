@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.perftests.digitaltariffs.operatorui
+package uk.gov.hmrc.perftests.digitaltariffs.operatorUI
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import io.netty.handler.codec.http.HttpResponseStatus
 import io.netty.handler.codec.http.HttpResponseStatus._
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
-import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiCorrespondenceRequest.{operatorUiBaseUrl, saveCsrfToken}
 
-object OperatorUiMiscRequest extends DigitalTariffsPerformanceTestRunner {
+object MiscRequest extends DigitalTariffsPerformanceTestRunner with RequestUtils {
 
   def getMiscCase: HttpRequestBuilder =
     http("GET Misc tab")
@@ -33,45 +31,37 @@ object OperatorUiMiscRequest extends DigitalTariffsPerformanceTestRunner {
       .check(saveCsrfToken)
 
   def getCreateMiscCase: HttpRequestBuilder =
-    http("GET to Create Misc page")
+    http("GET Create Misc page")
       .get(s"$operatorUiBaseUrl/create-new-miscellaneous")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postCreateNewMiscCase: HttpRequestBuilder =
-    http("Create a Misc case")
+    http("POST Create a Misc case")
       .post(s"$operatorUiBaseUrl/create-new-miscellaneous")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("name", "Misc Description")
       .formParam("contactName", "Contact Name")
       .formParam("caseType", "IB")
       .check(status.is(SEE_OTHER.code()))
-
-  def getNewMiscCaseViaAdvancedSearch: HttpRequestBuilder =
-    http("GET Find a Valid Misc Case Reference")
-      .get(s"$operatorUiBaseUrl/search?case_details=&commodity_code=&case_source=Contact+Name&decision_details=&keyword%5B0%5D=" +
-        s"&addToSearch=true&application_type%5B3%5D=MISCELLANEOUS&status%5B4%5D=NEW&selectedTab=details#advanced_search-results_and_filters"
-      )
-      .check(status.is(OK.code()))
-      .check(saveCsrfToken)
-      .check(css("#advanced_search_results-row-0-reference-link").find.saveAs("miscCaseReference"))
+      .check(header("location").transform(extractNumbers).saveAs("miscCaseReference"))
 
   def getMiscChooseReleaseTeam: HttpRequestBuilder =
     http("GET Release Misc Case to a team")
-      .get(operatorUiBaseUrl + "/cases/${miscCaseReference}/release")
+      .get(operatorUiBaseUrl + s"/cases/$${miscCaseReference}/release")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postMiscChooseReleaseTeam: HttpRequestBuilder =
     http("POST Release to a team")
-      .post(operatorUiBaseUrl + "/cases/${miscCaseReference}/release")
+      .post(operatorUiBaseUrl + s"/cases/$${miscCaseReference}/release")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("queue", "flex")
       .check(status.is(SEE_OTHER.code()))
 
   def getMiscCaseReleasedConfirmation: HttpRequestBuilder =
     http("GET Case release confirmation")
-      .get(operatorUiBaseUrl + "/cases/${miscCaseReference}/release/confirmation")
+      .get(operatorUiBaseUrl + s"/cases/$${miscCaseReference}/release/confirmation")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 }

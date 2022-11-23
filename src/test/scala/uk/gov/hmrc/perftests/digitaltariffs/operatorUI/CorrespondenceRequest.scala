@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.perftests.digitaltariffs.operatorui
+package uk.gov.hmrc.perftests.digitaltariffs.operatorUI
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import io.netty.handler.codec.http.HttpResponseStatus
 import io.netty.handler.codec.http.HttpResponseStatus._
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
-import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiLiabilityRequest.{operatorUiBaseUrl, saveCsrfToken}
 
-object OperatorUiCorrespondenceRequest extends DigitalTariffsPerformanceTestRunner {
+object CorrespondenceRequest extends DigitalTariffsPerformanceTestRunner with RequestUtils {
+
+  val getCaseReference =
+    css("#case-reference").find
+      .transform(extractNumbers)
+      .saveAs("correspondenceCaseReference")
 
   def getCorrespondenceCase: HttpRequestBuilder =
     http("GET Correspondence")
@@ -46,45 +49,31 @@ object OperatorUiCorrespondenceRequest extends DigitalTariffsPerformanceTestRunn
       .formParam("source", "a trader")
       .formParam("contactEmail", "abv@abv.com")
       .check(status.is(SEE_OTHER.code()))
-//      .check(header("location").saveAs("caseRefUrl"))
-
-  def getCorrespondenceRefViaAdvancedSearch: HttpRequestBuilder =
-    http("GET Find a Valid Correspondence Case Reference")
-      .get(
-        s"$operatorUiBaseUrl/search?case_details=&commodity_code=&case_source=a+trader&decision_details=&keyword%5B0%5D=" +
-          s"&addToSearch=false&application_type%5B2%5D=CORRESPONDENCE&status%5B4%5D=NEW&selectedTab=details#advanced_search-results_and_filters"
-      )
-      .check(status.is(OK.code()))
-      .check(saveCsrfToken)
-      .check(css("#advanced_search_results-row-0-reference-link").find.saveAs("correspondenceCaseReference"))
+      .check(header("location").saveAs("caseRefUrl"))
 
   def getReleaseCorrespondenceCase: HttpRequestBuilder =
     http("GET Release NEW Correspondence Case")
-      .get(operatorUiBaseUrl + "/release-correspondence-choice?reference=${correspondenceCaseReference}")
-//      .get(s"${baseUrlFor("tariff-classification-frontend")}/$${caseRefUrl}")
+      .get(s"${baseUrlFor("tariff-classification-frontend")}/$${caseRefUrl}")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
+      .check(getCaseReference)
 
   def postReleaseCorrespondenceCase: HttpRequestBuilder =
     http("POST Release NEW Correspondence Case")
-      .post(operatorUiBaseUrl + "/release-correspondence-choice?reference=${correspondenceCaseReference}")
-//      .post(s"${baseUrlFor("tariff-classification-frontend")}/$${caseRefUrl}")
+      .post(operatorUiBaseUrl + s"/release-correspondence-choice?reference=$${correspondenceCaseReference}")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("choice", "Yes")
       .check(status.is(SEE_OTHER.code()))
-      .check(header("location").saveAs("chooseReleaseTeamUrl"))
 
   def getChooseReleaseTeam: HttpRequestBuilder =
     http("GET Release to a team")
-      .get(operatorUiBaseUrl + "/cases/${correspondenceCaseReference}/release")
-//      .get(s"${baseUrlFor("tariff-classification-frontend")}/$${chooseReleaseTeamUrl}")
+      .get(operatorUiBaseUrl + s"/cases/$${correspondenceCaseReference}/release")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postChooseReleaseTeam: HttpRequestBuilder =
     http("POST Release to a team")
-      .post(operatorUiBaseUrl + "/cases/${correspondenceCaseReference}/release")
-//      .post(s"${baseUrlFor("tariff-classification-frontend")}/$${chooseReleaseTeamUrl}")
+      .post(operatorUiBaseUrl + s"/cases/$${correspondenceCaseReference}/release")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("queue", "flex")
       .check(status.is(SEE_OTHER.code()))
@@ -92,8 +81,7 @@ object OperatorUiCorrespondenceRequest extends DigitalTariffsPerformanceTestRunn
 
   def getCaseReleasedConfirmation: HttpRequestBuilder =
     http("GET Case release confirmation")
-      .get(operatorUiBaseUrl + "/cases/${correspondenceCaseReference}/release/confirmation")
-//      .get(s"${baseUrlFor("tariff-classification-frontend")}/$${relativeCaseReleasedConfirmationUrl}")
+      .get(operatorUiBaseUrl + s"/cases/$${correspondenceCaseReference}/release/confirmation")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 

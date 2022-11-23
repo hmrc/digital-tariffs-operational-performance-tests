@@ -19,46 +19,19 @@ package uk.gov.hmrc.perftests.digitaltariffs
 import io.gatling.core.Predef._
 import io.gatling.core.check.CheckBuilder
 import io.gatling.core.check.regex.RegexCheckType
-import io.gatling.core.controller.inject.open.OpenInjectionStep
-import io.gatling.http.Predef.http
-import io.gatling.http.protocol.HttpProtocolBuilder
 import uk.gov.hmrc.performance.conf.ServicesConfiguration
-import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 
-import scala.concurrent.duration._
+trait DigitalTariffsPerformanceTestRunner extends ServicesConfiguration {
 
-trait DigitalTariffsPerformanceTestRunner extends PerformanceTestRunner with ServicesConfiguration {
+  val deleteAllCasesStaging: Boolean = applicationConfig.getBoolean("services.deleteAllCases")
 
-//  protected def buildHttpProtocol(url: String): HttpProtocolBuilder =
-//    http
-//      .userAgentHeader("DigitalTariffs-PerformanceTests")
-//      .connectionHeader("close")
-//      .baseUrl(url)
+  val adminBaseUrl: String                          = baseUrlFor("tariff-classification-frontend")
+  val authStubBaseUrl: String                       = baseUrlFor("auth-login-stub") + "/auth-login-stub"
+  val traderUiBaseUrl: String                       = baseUrlFor("binding-tariff-trader-frontend") + "/advance-tariff-application"
+  val operatorUiBaseUrl: String                     = baseUrlFor("tariff-classification-frontend") + "/manage-tariff-classifications"
+  val bindingTariffClassificationBackendUrl: String = baseUrlFor("binding-tariff-classification")
 
-  protected val adminBaseUrl: String      = baseUrlFor("tariff-classification-frontend")
-  protected val authStubBaseUrl: String   = baseUrlFor("auth-login-stub") + "/auth-login-stub"
-  protected val traderUiBaseUrl: String   = baseUrlFor("binding-tariff-trader-frontend") + "/advance-tariff-application"
-  protected val operatorUiBaseUrl: String = baseUrlFor("tariff-classification-frontend") + "/manage-tariff-classifications"
-
-  protected val eoriNumber = "GB6723190"
-
-  protected val waitTime: FiniteDuration = 1.seconds
-
-  protected val rate                         = 0.5d
-  protected val rampInterval: FiniteDuration = 1.minute // 5.seconds
-  protected val mainInterval: FiniteDuration = 8.minutes // 15.seconds
-
-  protected def simulationSteps: Seq[OpenInjectionStep] =
-    Seq(
-      rampUsersPerSec(0).to(rate).during(rampInterval), // growth
-      constantUsersPerSec(rate).during(mainInterval), // constant
-      rampUsersPerSec(rate).to(0).during(rampInterval) // shutting down
-    )
-
-  protected def simulationAssertion: Seq[Assertion] =
-    Seq(
-      global.successfulRequests.percent.gte(99.0)
-    )
+  val eoriNumber = "AA000111222"
 
   def saveCsrfToken: CheckBuilder[RegexCheckType, String, String] =
     regex(_ => csrfPattern).saveAs("csrfToken")

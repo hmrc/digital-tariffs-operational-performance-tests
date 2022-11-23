@@ -10,6 +10,6 @@ object Dependencies {
     "com.typesafe.play"      %% "play-json"                 % "2.9.3",
     "io.gatling.highcharts"   % "gatling-charts-highcharts" % gatlingVersion,
     "io.gatling"              % "gatling-test-framework"    % gatlingVersion,
-    "uk.gov.hmrc"            %% "performance-test-runner"   % "5.1.0"
+    "uk.gov.hmrc"            %% "performance-test-runner"   % "5.3.0"
   ).map(_ % Test)
 }
