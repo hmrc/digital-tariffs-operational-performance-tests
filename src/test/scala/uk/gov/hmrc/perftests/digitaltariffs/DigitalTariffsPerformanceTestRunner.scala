@@ -29,12 +29,6 @@ import scala.concurrent.duration._
 
 trait DigitalTariffsPerformanceTestRunner extends PerformanceTestRunner with ServicesConfiguration {
 
-//  protected def buildHttpProtocol(url: String): HttpProtocolBuilder =
-//    http
-//      .userAgentHeader("DigitalTariffs-PerformanceTests")
-//      .connectionHeader("close")
-//      .baseUrl(url)
-
   protected val adminBaseUrl: String      = baseUrlFor("tariff-classification-frontend")
   protected val authStubBaseUrl: String   = baseUrlFor("auth-login-stub") + "/auth-login-stub"
   protected val traderUiBaseUrl: String   = baseUrlFor("binding-tariff-trader-frontend") + "/advance-tariff-application"
