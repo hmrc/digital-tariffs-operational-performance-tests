@@ -110,7 +110,6 @@ trait RequestUtils {
     regex(policyPattern).saveAs("policy")
   }
 
-
   def fileBytes(filename: String): Array[Byte] = {
     val resource: InputStream = getClass.getResourceAsStream(filename)
     Iterator.continually(resource.read).takeWhile(_ != -1).map(_.toByte).toArray

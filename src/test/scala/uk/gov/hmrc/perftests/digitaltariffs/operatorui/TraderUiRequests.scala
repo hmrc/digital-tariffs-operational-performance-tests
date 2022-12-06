@@ -24,7 +24,9 @@ import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
 
 object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
 
-  private val homePage = s"$traderUiBaseUrl/applications"
+  val extractNumbers: String => String = { (s: String) =>
+    """\d+""".r.findFirstIn(s).getOrElse("No Case No. found")
+  }
 
   def getYourApplicationsAndRulingsPage: HttpRequestBuilder =
     http("GET Your applications and rulings page")
@@ -165,7 +167,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
       .check(saveCsrfToken)
 
   def postRegisterForEori: HttpRequestBuilder =
-    http("Registered Address For Eori")
+    http("POST Registered Address For Eori")
       .post(s"$traderUiBaseUrl/provide-registered-eori-details")
       .formParamSeq(Seq(
         "csrfToken" -> s"$${csrfToken}",
@@ -185,7 +187,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
       .check(saveCsrfToken)
 
   def postEnterContactDetails: HttpRequestBuilder =
-    http("Provide the contact details")
+    http("POST Provide the contact details")
       .post(s"$traderUiBaseUrl/provide-contact-details")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("name", "Joe Bloggs")
@@ -204,4 +206,11 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner {
       .post(s"$traderUiBaseUrl/check-your-answers")
       .formParam("csrfToken", s"$${csrfToken}")
       .check(status.is(SEE_OTHER.code()))
+
+
+  def getConfirmationPage: HttpRequestBuilder =
+    http("GET Confirmation page")
+      .get(s"$traderUiBaseUrl/application-complete")
+      .check(status.is(OK.code()))
+      .check(css("#confirmation-reference").find.transform(extractNumbers).saveAs("atarCaseReference"))
 }

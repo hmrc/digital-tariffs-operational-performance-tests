@@ -21,16 +21,17 @@ import io.gatling.http.Predef.flushCookieJar
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.AuthRequests.{getAuthLoginStub, postAuthLoginStub}
-import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiCorrespondenceRequest._
-import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiLiabilityRequest._
-import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiMiscRequest._
-import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiRequests._
+import uk.gov.hmrc.perftests.digitaltariffs.operatorui.CorrespondenceRequest._
+import uk.gov.hmrc.perftests.digitaltariffs.operatorui.LiabilityRequest._
+import uk.gov.hmrc.perftests.digitaltariffs.operatorui.MiscRequest._
+import uk.gov.hmrc.perftests.digitaltariffs.operatorui.AtarRequests._
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.StrideAuthRequests._
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.TraderUiRequests._
 
-class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerformanceTestRunner {
+class OperatorUiSimulation extends  DigitalTariffsPerformanceTestRunner {
 
-  exec(flushCookieJar)
+  val flushAllCookies =
+    exec(flushCookieJar).actionBuilders.head
 
   val strideAuthSignInRequests =
     Seq(
@@ -42,8 +43,80 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
       postIdpResponseToStride
     )
 
-  val createAtarCase =
+
+  val hmrcOperatorUIJourney =
     Seq(
+      getStartPage,
+      getGatewayQueue,
+      //      getFindValidCaseReference,
+      getCaseTraderDetails,
+      getActionThisCase,
+      postActionThisCase,
+      getReleaseToAQueue,
+      postReleaseToAQueue,
+      getReleaseConfirmation,
+      getOpenCases,
+      getAssignCase,
+      postAssignCase,
+      getChangeCaseStatusRefer,
+      postChangeCaseStatusRefer,
+      getReferCase,
+      postReferCase,
+      getFileUpload,
+      postFileUpload,
+      getReferConfirmation
+    )
+
+  //  val atarJourney = createAtarCase ++ strideAuthSignInRequests ++ hmrcOperatorUIJourney
+
+  val liabilityRequests =
+    strideAuthSignInRequests ++
+      Seq(
+        getStartPage,
+        getOpenLiability,
+        getNewLiability,
+        postNewLiability,
+        //        getLiabilityRef,
+        getLiabilityCase,
+        getActionThisCase,
+        postActionThisCase,
+        getReleaseToAQueue,
+        postReleaseToAQueue,
+        getReleaseConfirmation,
+        getOpenCases,
+        getAssignCase,
+      )
+
+  val correspondenceRequests =
+    strideAuthSignInRequests ++
+      Seq(
+        getStartPage,
+        getCorrespondenceCase,
+        getCreateNewCorrespondenceCase,
+        postCreateNewCorrespondenceCase,
+        //        getCorrespondenceRefViaAdvancedSearch,
+        getReleaseCorrespondenceCase,
+        postReleaseCorrespondenceCase,
+        getChooseReleaseTeam,
+        postChooseReleaseTeam,
+        getCaseReleasedConfirmation
+      )
+
+  val miscCaseRequests =
+    strideAuthSignInRequests ++
+      Seq(
+        getStartPage,
+        getMiscCase,
+        getCreateMiscCase,
+        postCreateNewMiscCase,
+        //        getNewMiscCaseViaAdvancedSearch,
+        getMiscChooseReleaseTeam,
+        postMiscChooseReleaseTeam,
+        getMiscCaseReleasedConfirmation
+      )
+
+  setup("atar", "ATAR")
+    .withActions(
       getAuthLoginStub,
       postAuthLoginStub,
       getYourApplicationsAndRulingsPage,
@@ -73,82 +146,35 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
       postEnterContactDetails,
       getCheckYourAnswers,
       postCheckYourAnswers,
-    )
+      getConfirmationPage,
 
-  val hmrcOperatorUIJourney =
-    Seq(
+      flushAllCookies,
+      getProtectedPageNoSession,
+      getStrideSignIn,
+      getIdpSignInPage,
+      postIdpSignInPage,
+      getSignInRedirect,
+      postIdpResponseToStride,
       getStartPage,
       getGatewayQueue,
-      getFindValidCaseReference,
+      //      getFindValidCaseReference,
       getCaseTraderDetails,
-      getActionCase,
-      postActionCase,
-      getReleaseToAQueue,
-      postReleaseToAQueue,
-      getReleaseConfirmation,
-      getOpenCases,
-      getAssignCase,
-      postAssignCase,
-      getChangeCaseStatusRefer,
-      postChangeCaseStatusRefer,
-      getReferCase,
-      postReferCase,
-      getFileUpload,
-      postFileUpload,
-      getReferConfirmation
+      getActionAtarCase,
+      postActionAtarCase,
+      getAtarReleaseToAQueue,
+      postAtarReleaseToAQueue,
+      getAtarReleaseConfirmation,
+      getAtarOpenCases,
+      getAtarAssignCase,
+      postAtarAssignCase,
+      getAtarChangeCaseStatusRefer,
+      postAtarChangeCaseStatusRefer,
+      getAtarReferCase,
+      postAtarReferCase,
+      getAtarFileUpload,
+      postAtarFileUpload,
+      getAtarReferConfirmation
     )
-
-  val atarJourney = createAtarCase ++ strideAuthSignInRequests ++ hmrcOperatorUIJourney
-
-  val liabilityRequests =
-    strideAuthSignInRequests ++
-      Seq(
-        getStartPage,
-        getOpenLiability,
-        getNewLiability,
-        postNewLiability,
-        getLiabilityRef,
-        getCaseToAction,
-        getActionCase,
-        postActionCase,
-        getReleaseToAQueue,
-        postReleaseToAQueue,
-        getReleaseConfirmation,
-        getOpenCases,
-        getAssignCase,
-        getCaseToAction
-      )
-
-  val correspondenceRequests =
-    strideAuthSignInRequests ++
-      Seq(
-        getStartPage,
-        getCorrespondenceCase,
-        getCreateNewCorrespondenceCase,
-        postCreateNewCorrespondenceCase,
-        getCorrespondenceRefViaAdvancedSearch,
-        getReleaseCorrespondenceCase,
-        postReleaseCorrespondenceCase,
-        getChooseReleaseTeam,
-        postChooseReleaseTeam,
-        getCaseReleasedConfirmation
-      )
-
-  val miscCaseRequests =
-    strideAuthSignInRequests ++
-      Seq(
-        getStartPage,
-        getMiscCase,
-        getCreateMiscCase,
-        postCreateNewMiscCase,
-        getNewMiscCaseViaAdvancedSearch,
-        getMiscChooseReleaseTeam,
-        postMiscChooseReleaseTeam,
-        getMiscCaseReleasedConfirmation
-      )
-
-  setup("atar", "ATAR")
-    .withRequests(atarJourney: _*)
 
   setup("liability", "Liability")
     .withRequests(liabilityRequests: _*)

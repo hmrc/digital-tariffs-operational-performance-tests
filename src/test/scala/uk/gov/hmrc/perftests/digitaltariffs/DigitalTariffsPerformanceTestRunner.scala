@@ -34,7 +34,8 @@ trait DigitalTariffsPerformanceTestRunner extends PerformanceTestRunner with Ser
   protected val traderUiBaseUrl: String   = baseUrlFor("binding-tariff-trader-frontend") + "/advance-tariff-application"
   protected val operatorUiBaseUrl: String = baseUrlFor("tariff-classification-frontend") + "/manage-tariff-classifications"
 
-  protected val eoriNumber = "GB6723190"
+//  protected val eoriNumber = "GB6723190"
+  protected val eoriNumber = "AA000111222"
 
   protected val waitTime: FiniteDuration = 1.seconds
 
