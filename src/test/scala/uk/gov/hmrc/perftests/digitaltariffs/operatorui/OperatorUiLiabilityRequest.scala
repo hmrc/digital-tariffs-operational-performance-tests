@@ -22,7 +22,7 @@ import io.gatling.http.request.builder.HttpRequestBuilder
 import io.netty.handler.codec.http.HttpResponseStatus._
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
 
-object OperatorUiLiabilityRequest extends DigitalTariffsPerformanceTestRunner {
+object OperatorUiLiabilityRequest extends DigitalTariffsPerformanceTestRunner with RequestUtils {
 
   def getOpenLiability: HttpRequestBuilder =
     http("GET Open Liability")
@@ -106,33 +106,95 @@ object OperatorUiLiabilityRequest extends DigitalTariffsPerformanceTestRunner {
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
+  def postAssignCase: HttpRequestBuilder =
+    http("POST Assign a case")
+      .post(operatorUiBaseUrl + "/cases/${case_reference}/assign")
+      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("state", "true")
+      .check(status.is(SEE_OTHER.code()))
+
   def getChangeCaseStatusRefer: HttpRequestBuilder =
     http("GET Change a case status")
       .get(operatorUiBaseUrl + "/cases/${case_reference}/change-case-status")
-      .formParam("caseStatus", "refer")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
+
+  def postChangeCaseStatusRefer: HttpRequestBuilder =
+    http("POST Change a case status")
+      .post(operatorUiBaseUrl + "/cases/${case_reference}/change-case-status")
+      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("caseStatus", "refer")
+      .check(status.is(SEE_OTHER.code()))
 
   def getReferCase: HttpRequestBuilder =
     http("GET Refer a case")
       .get(operatorUiBaseUrl + "/cases/${case_reference}/refer-reason")
-      .formParam("referredTo", "Laboratory analyst")
-      .formParam("note", "A note from me")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
+  def postReferCase: HttpRequestBuilder =
+    http("POST Refer a case")
+      .post(operatorUiBaseUrl + "/cases/${case_reference}/refer-reason")
+      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("referredTo", "Laboratory analyst")
+      .formParam("note", "A note from me")
+      .check(status.is(SEE_OTHER.code()))
+
   def getFileUpload: HttpRequestBuilder = {
-    val file = System.getProperty("user.dir") + "/src/test/files/FileUploadPDF.pdf"
-    http("Post Select file as success")
+    http("GET Upload file refer case")
       .get(operatorUiBaseUrl + "/cases/${case_reference}/refer-email")
-      .formUpload("fileToUpload", file)
-      .formParam("file", "Upload")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
+      .check(saveFileUploadurl)
+      .check(saveCallBack)
+      .check(saveAmazonDate)
+      .check(saveAmazonCredential)
+      .check(saveUpscanIniateResponse)
+      .check(saveUpscanInitiateRecieved)
+      .check(saveAmazonMetaOriginalFileName)
+      .check(saveAmazonAlgorithm)
+      .check(saveKey)
+      .check(saveAMZMetaRequestId)
+      .check(saveAMZMetaSessionId)
+      .check(saveAmazonSignature)
+      .check(savePolicy)
+      .check(saveSuccessRedirect)
+      .check(saveErrorRedirect)
+  }
+
+  def postFileUpload: HttpRequestBuilder = {
+    val file = System.getProperty("user.dir") + "/src/test/files/FileUploadPDF.pdf"
+    http("POST Upload file refer case")
+      .post("https://www.staging.upscan.tax.service.gov.uk/v1/uploads/fus-inbound-830f78e090fe8aec00891405dfc14824")
+      .header("content-type", "multipart/form-data; boundary=----WebKitFormBoundaryA81LRm2SGmby4vFN")
+      .asMultipartForm
+      .bodyPart(StringBodyPart("success_action_redirect", "${successRedirect}"))
+      .bodyPart(StringBodyPart("error_action_redirect", "${errorRedirect}"))
+      .bodyPart(StringBodyPart("x-amz-meta-callback-url", "${callBack}"))
+      .bodyPart(StringBodyPart("x-amz-date", "${amazonDate}"))
+      .bodyPart(StringBodyPart("x-amz-credential", "${amazonCredential}"))
+      .bodyPart(StringBodyPart("x-amz-meta-upscan-initiate-response", "${upscanInitiateResponse}"))
+      .bodyPart(StringBodyPart("x-amz-meta-upscan-initiate-received", "${upscanInitiateReceived}"))
+      .bodyPart(StringBodyPart("x-amz-meta-request-id", "${amazonMetaRequestID}"))
+      //        .bodyPart(StringBodyPart("x-amz-meta-original-filename", "${filename}"))
+      .bodyPart(StringBodyPart("x-amz-algorithm", "${amazonAlgorithm}"))
+      .bodyPart(StringBodyPart("key", "${key}"))
+      .bodyPart(StringBodyPart("acl", "private"))
+      .bodyPart(StringBodyPart("x-amz-signature", "${amazonSignature}"))
+      .bodyPart(StringBodyPart("x-amz-meta-session-id", "${amazonMetaSessionID}"))
+      .bodyPart(StringBodyPart("x-amz-meta-consuming-service", "binding-tariff-filestore"))
+      .bodyPart(StringBodyPart("policy", "${policy}"))
+      .bodyPart(RawFileBodyPart("file", file))
+      //      .bodyPart(
+      //        RawFileBodyPart("file", file)
+      //          .contentType("application/pdf")
+      //          .fileName("FileUploadPDF.pdf")
+      //      )
+      .check(status.is(SEE_OTHER.code()))
   }
 
   def getReferConfirmation: HttpRequestBuilder =
-    http("Case referred")
+    http("GET Case referred confirmation")
       .get(operatorUiBaseUrl + "/cases/${case_reference}/refer/confirmation")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)

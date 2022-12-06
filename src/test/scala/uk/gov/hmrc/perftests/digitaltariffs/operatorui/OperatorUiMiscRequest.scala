@@ -19,10 +19,8 @@ package uk.gov.hmrc.perftests.digitaltariffs.operatorui
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import io.netty.handler.codec.http.HttpResponseStatus
 import io.netty.handler.codec.http.HttpResponseStatus._
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
-import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiCorrespondenceRequest.{operatorUiBaseUrl, saveCsrfToken}
 
 object OperatorUiMiscRequest extends DigitalTariffsPerformanceTestRunner {
 
@@ -33,13 +31,13 @@ object OperatorUiMiscRequest extends DigitalTariffsPerformanceTestRunner {
       .check(saveCsrfToken)
 
   def getCreateMiscCase: HttpRequestBuilder =
-    http("GET to Create Misc page")
+    http("GET Create Misc page")
       .get(s"$operatorUiBaseUrl/create-new-miscellaneous")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postCreateNewMiscCase: HttpRequestBuilder =
-    http("Create a Misc case")
+    http("POST Create a Misc case")
       .post(s"$operatorUiBaseUrl/create-new-miscellaneous")
       .formParam("csrfToken", s"$${csrfToken}")
       .formParam("name", "Misc Description")

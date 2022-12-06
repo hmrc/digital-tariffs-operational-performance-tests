@@ -40,7 +40,7 @@ object OperatorUiRequests extends DigitalTariffsPerformanceTestRunner {
       .check(status.is(OK.code()))
 
   def getCaseTraderDetails: HttpRequestBuilder =
-    http(s"View Case Trader Details")
+    http("GET View Case Trader Details")
       .get(operatorUiBaseUrl + "/cases/v2/${case_reference}/atar")
       .check(status.is(OK.code()))
 
@@ -51,5 +51,7 @@ object OperatorUiRequests extends DigitalTariffsPerformanceTestRunner {
           s"&keyword%5B0%5D=&application_type%5B0%5D=BTI&status%5B4%5D=NEW&selectedTab=details#advanced_search-results_and_filters"
       )
       .check(status.is(OK.code()))
-      .check(css("#advanced_search_results-row-0-reference-link").find.saveAs("case_reference"))
+      .check(
+        css("#advanced_search_results-row-0-reference-link").find.saveAs("case_reference")
+      )
 }

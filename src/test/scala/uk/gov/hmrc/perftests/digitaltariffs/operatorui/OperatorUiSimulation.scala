@@ -20,11 +20,13 @@ import io.gatling.core.Predef.exec
 import io.gatling.http.Predef.flushCookieJar
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
+import uk.gov.hmrc.perftests.digitaltariffs.operatorui.AuthRequests.{getAuthLoginStub, postAuthLoginStub}
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiCorrespondenceRequest._
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiLiabilityRequest._
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiMiscRequest._
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.OperatorUiRequests._
 import uk.gov.hmrc.perftests.digitaltariffs.operatorui.StrideAuthRequests._
+import uk.gov.hmrc.perftests.digitaltariffs.operatorui.TraderUiRequests._
 
 class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerformanceTestRunner {
 
@@ -40,49 +42,63 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
       postIdpResponseToStride
     )
 
-  //  setup("atar", "ATaR Case").withRequests(
-  //    //Create ATaR Case
-  //    getGovGatewaySignIn,
-  //    postGovGatewaySignIn,
-  //    getTraderStartPage,
-  //    getInformationYouNeed,
-  //    getInformationMadePublic,
-  //    getGoodsName,
-  //    postGoodsName,
-  //    postGoodsDescription,
-  //    postConfidentialInfo,
-  //    postUploadSupportingDocument,
-  //    postAreYouSendingASample,
-  //    postHaveYouFoundCommodityCode,
-  //    postLegalChallenge,
-  //    postPreviousRulingReference,
-  //    postSimilarRuling,
-  //    postRegisterForEori,
-  //    postEnterContactDetails,
-  //    postCheckYourAnswers,
-  //    //    flushAllCookies,
-  //    // Stride Auth Sign In
-  //    getProtectedPageNoSession,
-  //    getStrideSignIn,
-  //    getIdpSignInPage,
-  //    postIdpSignInPage,
-  //    getSignInRedirect,
-  //    postIdpResponseToStride,
-  //    // HMRC Operator UI journey
-  //    getStartPage,
-  //    getGatewayQueue,
-  //    getFindValidCaseReference,
-  //    getCaseTraderDetails,
-  //    getActionCase,
-  //    getReleaseToAQueue,
-  //    getReleaseConfirmation,
-  //    getOpenCases,
-  //    getAssignCase,
-  //    getChangeCaseStatusRefer,
-  //    getReferCase,
-  //    getFileUpload,
-  //    getReferConfirmation
-  //  )
+  val createAtarCase =
+    Seq(
+      getAuthLoginStub,
+      postAuthLoginStub,
+      getYourApplicationsAndRulingsPage,
+      getInformationYouNeed,
+      getInformationMadePublic,
+      getGoodsName,
+      postGoodsName,
+      getGoodsDescription,
+      postGoodsDescription,
+      getConfidentialInfo,
+      postConfidentialInfo,
+      getUploadSupportingDocument,
+      postUploadSupportingDocument,
+      getAreYouSendingASample,
+      postAreYouSendingASample,
+      getHaveYouFoundCommodityCode,
+      postHaveYouFoundCommodityCode,
+      getLegalChallenge,
+      postLegalChallenge,
+      getPreviousRulingReference,
+      postPreviousRulingReference,
+      getSimilarRuling,
+      postSimilarRuling,
+      getRegisterForEori,
+      postRegisterForEori,
+      getEnterContactDetails,
+      postEnterContactDetails,
+      getCheckYourAnswers,
+      postCheckYourAnswers,
+    )
+
+  val hmrcOperatorUIJourney =
+    Seq(
+      getStartPage,
+      getGatewayQueue,
+      getFindValidCaseReference,
+      getCaseTraderDetails,
+      getActionCase,
+      postActionCase,
+      getReleaseToAQueue,
+      postReleaseToAQueue,
+      getReleaseConfirmation,
+      getOpenCases,
+      getAssignCase,
+      postAssignCase,
+      getChangeCaseStatusRefer,
+      postChangeCaseStatusRefer,
+      getReferCase,
+      postReferCase,
+      getFileUpload,
+      postFileUpload,
+      getReferConfirmation
+    )
+
+  val atarJourney = createAtarCase ++ strideAuthSignInRequests ++ hmrcOperatorUIJourney
 
   val liabilityRequests =
     strideAuthSignInRequests ++
@@ -103,9 +119,6 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
         getCaseToAction
       )
 
-  setup("liability", "Liability application")
-    .withRequests(liabilityRequests: _*)
-
   val correspondenceRequests =
     strideAuthSignInRequests ++
       Seq(
@@ -121,9 +134,6 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
         getCaseReleasedConfirmation
       )
 
-  setup("correspondence", "Correspondence case")
-    .withRequests(correspondenceRequests: _*)
-
   val miscCaseRequests =
     strideAuthSignInRequests ++
       Seq(
@@ -137,7 +147,16 @@ class OperatorUiSimulation extends PerformanceTestRunner with DigitalTariffsPerf
         getMiscCaseReleasedConfirmation
       )
 
-  setup("misc", "Misc case")
+  setup("atar", "ATAR")
+    .withRequests(atarJourney: _*)
+
+  setup("liability", "Liability")
+    .withRequests(liabilityRequests: _*)
+
+  setup("correspondence", "Correspondence")
+    .withRequests(correspondenceRequests: _*)
+
+  setup("misc", "Misc")
     .withRequests(miscCaseRequests: _*)
 
   runSimulation()

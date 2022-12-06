@@ -25,17 +25,17 @@ import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
 
 object AuthRequests extends DigitalTariffsPerformanceTestRunner {
 
-  def getGovGatewaySignIn: HttpRequestBuilder =
-    http("Government Gateway Sign In - GET")
+  def getAuthLoginStub: HttpRequestBuilder =
+    http("GET Auth Login Stub Sign In")
       .get(s"$authStubBaseUrl/gg-sign-in")
       .check(status.is(OK.code()))
 
-  def postGovGatewaySignIn: HttpRequestBuilder =
-    http("Government Gateway Sign In - POST")
+  def postAuthLoginStub: HttpRequestBuilder =
+    http("POST Auth Login Stub Sign In")
       .post(s"$authStubBaseUrl/gg-sign-in")
       .formParam("authorityId", "")
       .formParam("gatewayToken", "")
-      .formParam("redirectionUrl", traderUiBaseUrl)
+      .formParam("redirectionUrl", s"$traderUiBaseUrl/applications-and-rulings")
       .formParam("credentialStrength", "strong")
       .formParam("confidenceLevel", "50")
       .formParam("affinityGroup", "Individual")
