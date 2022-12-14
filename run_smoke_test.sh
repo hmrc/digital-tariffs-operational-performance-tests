@@ -1,2 +1,2 @@
 #!/bin/bash
-sbt -Dperftest.runSmokeTest=true -DrunLocal=false gatling:test
+sbt -Dperftest.runSmokeTest=true -DrunLocal=false Gatling/test
