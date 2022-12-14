@@ -14,34 +14,36 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.perftests.digitaltariffs.operatorui
+package uk.gov.hmrc.perftests.digitaltariffs.operatorUI
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
-import io.netty.handler.codec.http.HttpResponseStatus
+import io.netty.handler.codec.http.HttpResponseStatus._
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
 
 object AuthRequests extends DigitalTariffsPerformanceTestRunner {
 
-  def getGovGatewaySignIn: HttpRequestBuilder =
-    http("Government Gateway Sign In - GET")
+  def getAuthLoginStub: HttpRequestBuilder =
+    http("GET Auth Login Stub Sign In")
       .get(s"$authStubBaseUrl/gg-sign-in")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(OK.code()))
 
-  def postGovGatewaySignIn: HttpRequestBuilder =
-    http("Government Gateway Sign In - POST")
+  def postAuthLoginStub: HttpRequestBuilder =
+    http("POST Auth Login Stub Sign In")
       .post(s"$authStubBaseUrl/gg-sign-in")
       .formParam("authorityId", "")
-      .formParam("redirectionUrl", traderUiBaseUrl)
-      .formParam("credentialStrength", "weak")
+      .formParam("gatewayToken", "")
+      .formParam("redirectionUrl", s"$traderUiBaseUrl/applications-and-rulings")
+      .formParam("credentialStrength", "strong")
       .formParam("confidenceLevel", "50")
       .formParam("affinityGroup", "Individual")
       .formParam("email", "user@test.com")
       .formParam("credentialRole", "User")
+      .formParam("additionalInfo.emailVerified", "N/A")
       .formParam("enrolment[0].name", "HMRC-ATAR-ORG")
       .formParam("enrolment[0].taxIdentifier[0].name", "EORINumber")
       .formParam("enrolment[0].taxIdentifier[0].value", eoriNumber)
       .formParam("enrolment[0].state", "Activated")
-      .check(status.is(HttpResponseStatus.OK.code()))
+      .check(status.is(SEE_OTHER.code()))
 }
