@@ -2,4 +2,4 @@
 
 ./run_format_and_deps.sh
 
-sbt gatling:test -DrunLocal=true
+sbt Gatling/test -DrunLocal=true

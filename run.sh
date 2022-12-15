@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sbt gatling:test
+sbt Gatling/test
