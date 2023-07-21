@@ -1,5 +1,5 @@
 lazy val root = (project in file("."))
-  .enablePlugins(SbtAutoBuildPlugin, GatlingPlugin)
+  .enablePlugins(GatlingPlugin)
   .settings(
     name := "digital-tariffs-operational-performance-tests",
     version := "0.1.0",

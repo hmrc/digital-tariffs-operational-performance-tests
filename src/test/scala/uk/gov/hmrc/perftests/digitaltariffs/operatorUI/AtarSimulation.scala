@@ -49,37 +49,14 @@ class AtarSimulation extends PerformanceTestRunner with DigitalTariffsPerformanc
   val flushAllCookies: ActionBuilder =
     exec(flushCookieJar).actionBuilders.head
 
-  private def withAtLeastOneRequestInTheFullTest(load: Double) =
-    load match {
-      case rate if (constantRateTime.toSeconds * rate).toInt < 1 => 1d / (constantRateTime.toSeconds - 1)
-      case rate                                                  => rate
-    }
-
   override def withInjectedLoad(journeys: Seq[Journey]): Seq[PopulationBuilder] = {
+    val fullJourneys = super.withInjectedLoad(journeys)
 
-    val fullJourneys =
-      journeys.map { journey =>
-        val load = withAtLeastOneRequestInTheFullTest(journey.load * loadPercentage)
-
-        val injectionSteps: List[OpenInjectionStep] =
-          List(
-            rampUsersPerSec(noLoad).to(load).during(rampUpTime),
-            constantUsersPerSec(load).during(constantRateTime),
-            rampUsersPerSec(load).to(noLoad).during(rampDownTime)
-          )
-
-        val fullJourney = journey.builder.inject(injectionSteps)
-        fullJourney
-      }
-
-    val allJourneys =
-      if (deleteAllCasesStaging) {
-        deleteCasesScenario +: fullJourneys
-      } else {
-        fullJourneys
-      }
-
-    allJourneys
+    if (deleteAllCasesStaging) {
+      deleteCasesScenario +: fullJourneys
+    } else {
+      fullJourneys
+    }
   }
 
   val strideAuthSignInRequests =
