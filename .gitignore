@@ -6,6 +6,8 @@ lib_managed
 tmp
 .history
 dist
+.DS_Store
+**/*.DS_Store
 /.idea
 /*.iml
 /*.ipr

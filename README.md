@@ -20,7 +20,7 @@ This code is open source software licensed under the [Apache 2.0 License]("http:
 
 **To run this Service you will need:**
 
-1. **Service Manager** installed
+1. **Service Manager 2** installed
 2. **SBT Version >=1.x** installed
 3. **MongoDB version >=3.6** installed and running on **port: 27017**
 4. **Localstack** installed and running on **port: 4572**
@@ -43,9 +43,9 @@ If you have not worked with pdf-generator-service before. You may need to set up
 export GITHUB_API_TOKEN="your token goes here"  
 ```
 
-If it still fails being run by **Service Manager** try the following:
+If it still fails being run by **Service Manager 2** try the following:
 ```
-  sm --stop PDF_GENERATOR_SERVICE
+  sm2 --stop PDF_GENERATOR_SERVICE
 ```
 Then in the PDF_GENERATOR_SERVICE
 ```  
@@ -138,13 +138,13 @@ Then check this URL is available in the browser:
 ### Run required microservices
 Run the following command:
 
-`sm --start DIGITAL_TARIFFS -r`
+`sm2 --start DIGITAL_TARIFFS`
 
-`sm --stop PDF_GENERATOR_SERVICE`
+`sm2 --stop PDF_GENERATOR_SERVICE`
 
-`sm --start PDF_GENERATOR_SERVICE -r 1\.20\.0`
+`sm2 --start PDF_GENERATOR_SERVICE:1.20.0`
 
-`sm --start FEEDBACK_FRONTEND -f`
+`sm2 --start FEEDBACK_FRONTEND`
 
 ---
 
