@@ -1,15 +1,15 @@
-import sbt._
+import sbt.*
 
 object Dependencies {
 
   private val gatlingVersion = "3.6.1"
 
-  private val test               = Seq(
-    "io.gatling.highcharts" % "gatling-charts-highcharts" % gatlingVersion,
+  val test: Seq[ModuleID] = Seq(
+    "uk.gov.hmrc"          %% "performance-test-runner"   % "5.6.0",
     "io.gatling"            % "gatling-test-framework"    % gatlingVersion,
-    "uk.gov.hmrc"          %% "performance-test-runner"   % "5.6.0"
-  ).map(_ % Test)
+    "io.gatling.highcharts" % "gatling-charts-highcharts" % gatlingVersion
+  )
 
-  def apply(): Seq[sbt.ModuleID] = test
+  def apply(): Seq[ModuleID] = test
 
 }

@@ -22,7 +22,7 @@ This code is open source software licensed under the [Apache 2.0 License]("http:
 
 1. **Service Manager 2** installed
 2. **SBT Version >=1.x** installed
-3. **MongoDB version >=3.6** installed and running on **port: 27017**
+3. **MongoDB version >=5.0** installed and running on **port: 27017**
 4. **Localstack** installed and running on **port: 4572**
 5. Create an S3 bucket in Localstack by using this command within the localstack container:
 ```
@@ -59,7 +59,7 @@ An easiest way to run MongoDB and Localstack for local development is to use Doc
 ### Run Mongo
 
 ```
-docker run --restart unless-stopped -d -p 27017-27019:27017-27019 --name mongodb mongo:3.6.13
+docker run --restart unless-stopped -d -p 27017-27019:27017-27019 --name mongodb mongo:5.0
 ```
 
 ---

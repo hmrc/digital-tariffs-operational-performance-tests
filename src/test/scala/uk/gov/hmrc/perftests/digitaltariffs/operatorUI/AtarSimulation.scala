@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package uk.gov.hmrc.perftests.digitaltariffs.operatorUI
 
 import io.gatling.core.Predef._
 import io.gatling.core.action.builder.ActionBuilder
-import io.gatling.core.controller.inject.open.OpenInjectionStep
 import io.gatling.core.structure.PopulationBuilder
 import io.gatling.http.Predef.flushCookieJar
 import io.gatling.http.request.builder.HttpRequestBuilder
@@ -59,7 +58,7 @@ class AtarSimulation extends PerformanceTestRunner with DigitalTariffsPerformanc
     }
   }
 
-  val strideAuthSignInRequests =
+  val strideAuthSignInRequests: Seq[HttpRequestBuilder] =
     Seq(
       getProtectedPageNoSession,
       getStrideSignIn,
