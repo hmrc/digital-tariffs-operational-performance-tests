@@ -2,4 +2,4 @@
 
 ./run_format_and_deps.sh
 
-sbt Gatling/test -DrunLocal=true
+sbt -Dperftest.runSmokeTest=false -DrunLocal=true Gatling/test
