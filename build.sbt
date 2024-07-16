@@ -1,10 +1,10 @@
-ThisBuild / scalaVersion := "2.13.13"
+ThisBuild / scalaVersion := "2.13.14"
 
 lazy val root = (project in file("."))
   .enablePlugins(GatlingPlugin)
   .settings(
     name := "digital-tariffs-operational-performance-tests",
-    version := "0.1.0",
+    version := "2.0.0",
     scalacOptions += "-feature",
     libraryDependencies ++= Dependencies(),
     // Enabling sbt-auto-build plugin provides DefaultBuildSettings with default `testOptions` from `sbt-settings` plugin.
@@ -13,4 +13,3 @@ lazy val root = (project in file("."))
   )
 
 addCommandAlias("scalafmtAll", "all scalafmtSbt scalafmt Test/scalafmt")
-addCommandAlias("scalastyleAll", "all scalastyle Test/scalastyle")
