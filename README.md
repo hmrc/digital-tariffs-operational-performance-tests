@@ -29,32 +29,7 @@ This code is open source software licensed under the [Apache 2.0 License]("http:
 awslocal s3 mb s3://digital-tariffs-local
 ```
 
-### PDF-Generator-Service
-
-Follow the Readme: https://github.com/hmrc/pdf-generator-service
-
-If you have not worked with pdf-generator-service before. You may need to set up `ghostscript`, `wkhtmltopdf`  and a `github access token`.
-
-1. Minimal amount of permissions for your token, if unsure allow all permissions for your token
-2. Easier with no expiry date
-3. Then set as a sys variable can be added in .bashrc / .zshrc add below to your bash/zsh profile
-
-```
-export GITHUB_API_TOKEN="your token goes here"  
-```
-
-If it still fails being run by **Service Manager 2** try the following:
-```
-  sm2 --stop PDF_GENERATOR_SERVICE
-```
-Then in the PDF_GENERATOR_SERVICE
-```  
-  sbt "run 9852" 
-```
-
----
-
-An easiest way to run MongoDB and Localstack for local development is to use Docker.
+The easiest way to run MongoDB and Localstack for local development is to use Docker.
 
 ### Run Mongo
 
@@ -139,10 +114,6 @@ Then check this URL is available in the browser:
 Run the following command:
 
 `sm2 --start DIGITAL_TARIFFS`
-
-`sm2 --stop PDF_GENERATOR_SERVICE`
-
-`sm2 --start PDF_GENERATOR_SERVICE:1.20.0`
 
 `sm2 --start FEEDBACK_FRONTEND`
 
