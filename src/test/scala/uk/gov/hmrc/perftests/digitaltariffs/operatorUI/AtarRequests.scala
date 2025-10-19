@@ -41,39 +41,39 @@ object AtarRequests extends DigitalTariffsPerformanceTestRunner with RequestUtil
 
   def getCaseTraderDetails: HttpRequestBuilder =
     http("GET View Case Trader Details")
-      .get(operatorUiBaseUrl + "/cases/v2/${atarCaseReference}/atar")
+      .get(operatorUiBaseUrl + "/cases/v2/#{atarCaseReference}/atar")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def getReleaseOrSuppressAtarCase: HttpRequestBuilder =
     http("GET Action Atar release or suppress case")
-      .get(operatorUiBaseUrl + s"/cases/$${atarCaseReference}/release-or-suppress-case")
+      .get(operatorUiBaseUrl + "/cases/#{atarCaseReference}/release-or-suppress-case")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postReleaseOrSuppressAtarCase: HttpRequestBuilder =
     http("POST Action Atar release or suppress case")
-      .post(operatorUiBaseUrl + s"/cases/$${atarCaseReference}/release-or-suppress-case")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .post(operatorUiBaseUrl + "/cases/#{atarCaseReference}/release-or-suppress-case")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("caseStatus", "release")
       .check(status.is(SEE_OTHER.code()))
 
   def getAtarReleaseToAQueue: HttpRequestBuilder =
     http("GET Choose a team to release")
-      .get(operatorUiBaseUrl + s"/cases/$${atarCaseReference}/release")
+      .get(operatorUiBaseUrl + "/cases/#{atarCaseReference}/release")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postAtarReleaseToAQueue: HttpRequestBuilder =
     http("POST Choose a team to release")
-      .post(operatorUiBaseUrl + s"/cases/$${atarCaseReference}/release")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .post(operatorUiBaseUrl + "/cases/#{atarCaseReference}/release")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("queue", "act")
       .check(status.is(SEE_OTHER.code()))
 
   def getAtarReleaseConfirmation: HttpRequestBuilder =
     http("GET Release confirmation")
-      .get(operatorUiBaseUrl + s"/cases/$${atarCaseReference}/release/confirmation")
+      .get(operatorUiBaseUrl + "/cases/#{atarCaseReference}/release/confirmation")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
@@ -85,47 +85,47 @@ object AtarRequests extends DigitalTariffsPerformanceTestRunner with RequestUtil
 
   def getAtarAssignCase: HttpRequestBuilder =
     http("GET Assign a case")
-      .get(operatorUiBaseUrl + s"/cases/$${atarCaseReference}/assign")
+      .get(operatorUiBaseUrl + "/cases/#{atarCaseReference}/assign")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postAtarAssignCase: HttpRequestBuilder =
     http("POST Assign a case")
-      .post(operatorUiBaseUrl + s"/cases/$${atarCaseReference}/assign")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .post(operatorUiBaseUrl + "/cases/#{atarCaseReference}/assign")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("state", "true")
       .check(status.is(SEE_OTHER.code()))
 
   def getAtarChangeCaseStatusRefer: HttpRequestBuilder =
     http("GET Change a case status")
-      .get(operatorUiBaseUrl + s"/cases/$${atarCaseReference}/change-case-status")
+      .get(operatorUiBaseUrl + "/cases/#{atarCaseReference}/change-case-status")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postAtarChangeCaseStatusRefer: HttpRequestBuilder =
     http("POST Change a case status")
-      .post(operatorUiBaseUrl + s"/cases/$${atarCaseReference}/change-case-status")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .post(operatorUiBaseUrl + "/cases/#{atarCaseReference}/change-case-status")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("caseStatus", "refer")
       .check(status.is(SEE_OTHER.code()))
 
   def getAtarReferCase: HttpRequestBuilder =
     http("GET Refer a case")
-      .get(operatorUiBaseUrl + s"/cases/$${atarCaseReference}/refer-reason")
+      .get(operatorUiBaseUrl + "/cases/#{atarCaseReference}/refer-reason")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postAtarReferCase: HttpRequestBuilder =
     http("POST Refer a case")
-      .post(operatorUiBaseUrl + s"/cases/$${atarCaseReference}/refer-reason")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .post(operatorUiBaseUrl + "/cases/#{atarCaseReference}/refer-reason")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("referredTo", "Laboratory analyst")
       .formParam("note", "A note from me")
       .check(status.is(SEE_OTHER.code()))
 
   def getAtarFileUpload: HttpRequestBuilder =
     http("GET Upload file refer case")
-      .get(operatorUiBaseUrl + s"/cases/$${atarCaseReference}/refer-email")
+      .get(operatorUiBaseUrl + "/cases/#{atarCaseReference}/refer-email")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
       .check(saveFileUploadurl)
@@ -150,28 +150,28 @@ object AtarRequests extends DigitalTariffsPerformanceTestRunner with RequestUtil
       .post("https://www.staging.upscan.tax.service.gov.uk/v1/uploads/fus-inbound-830f78e090fe8aec00891405dfc14824")
       .header("content-type", "multipart/form-data; boundary=----WebKitFormBoundaryA81LRm2SGmby4vFN")
       .asMultipartForm
-      .bodyPart(StringBodyPart("success_action_redirect", "${successRedirect}"))
-      .bodyPart(StringBodyPart("error_action_redirect", "${errorRedirect}"))
-      .bodyPart(StringBodyPart("x-amz-meta-callback-url", "${callBack}"))
-      .bodyPart(StringBodyPart("x-amz-date", "${amazonDate}"))
-      .bodyPart(StringBodyPart("x-amz-credential", "${amazonCredential}"))
-      .bodyPart(StringBodyPart("x-amz-meta-upscan-initiate-response", "${upscanInitiateResponse}"))
-      .bodyPart(StringBodyPart("x-amz-meta-upscan-initiate-received", "${upscanInitiateReceived}"))
-      .bodyPart(StringBodyPart("x-amz-meta-request-id", "${amazonMetaRequestID}"))
-      .bodyPart(StringBodyPart("x-amz-algorithm", "${amazonAlgorithm}"))
-      .bodyPart(StringBodyPart("key", "${key}"))
+      .bodyPart(StringBodyPart("success_action_redirect", "#{successRedirect}"))
+      .bodyPart(StringBodyPart("error_action_redirect", "#{errorRedirect}"))
+      .bodyPart(StringBodyPart("x-amz-meta-callback-url", "#{callBack}"))
+      .bodyPart(StringBodyPart("x-amz-date", "#{amazonDate}"))
+      .bodyPart(StringBodyPart("x-amz-credential", "#{amazonCredential}"))
+      .bodyPart(StringBodyPart("x-amz-meta-upscan-initiate-response", "#{upscanInitiateResponse}"))
+      .bodyPart(StringBodyPart("x-amz-meta-upscan-initiate-received", "#{upscanInitiateReceived}"))
+      .bodyPart(StringBodyPart("x-amz-meta-request-id", "#{amazonMetaRequestID}"))
+      .bodyPart(StringBodyPart("x-amz-algorithm", "#{amazonAlgorithm}"))
+      .bodyPart(StringBodyPart("key", "#{key}"))
       .bodyPart(StringBodyPart("acl", "private"))
-      .bodyPart(StringBodyPart("x-amz-signature", "${amazonSignature}"))
-      .bodyPart(StringBodyPart("x-amz-meta-session-id", "${amazonMetaSessionID}"))
+      .bodyPart(StringBodyPart("x-amz-signature", "#{amazonSignature}"))
+      .bodyPart(StringBodyPart("x-amz-meta-session-id", "#{amazonMetaSessionID}"))
       .bodyPart(StringBodyPart("x-amz-meta-consuming-service", "binding-tariff-filestore"))
-      .bodyPart(StringBodyPart("policy", "${policy}"))
+      .bodyPart(StringBodyPart("policy", "#{policy}"))
       .bodyPart(RawFileBodyPart("file", file))
       .check(status.is(SEE_OTHER.code()))
   }
 
   def getAtarReferConfirmation: HttpRequestBuilder =
     http("GET Case referred confirmation")
-      .get(operatorUiBaseUrl + s"/cases/$${atarCaseReference}/refer/confirmation")
+      .get(operatorUiBaseUrl + "/cases/#{atarCaseReference}/refer/confirmation")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 }

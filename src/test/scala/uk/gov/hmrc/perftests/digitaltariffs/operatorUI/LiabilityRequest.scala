@@ -39,7 +39,7 @@ object LiabilityRequest extends DigitalTariffsPerformanceTestRunner with Request
   def postNewLiability: HttpRequestBuilder =
     http("POST Post-New liability information")
       .post(s"$operatorUiBaseUrl/new-liability")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("item-name", "Unique Performance Test Liability")
       .formParam("trader-name", "Unique PT Trader Joe")
       .formParam("liability-status", "LIVE")
@@ -48,39 +48,39 @@ object LiabilityRequest extends DigitalTariffsPerformanceTestRunner with Request
 
   def getLiabilityCase: HttpRequestBuilder =
     http("GET Liability page")
-      .get(operatorUiBaseUrl + s"/cases/v2/$${liabilityCaseReference}/liability")
+      .get(operatorUiBaseUrl + "/cases/v2/#{liabilityCaseReference}/liability")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def getActionThisCase: HttpRequestBuilder =
     http("GET Action liability case")
-      .get(operatorUiBaseUrl + s"/cases/$${liabilityCaseReference}/release-or-suppress-case")
+      .get(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/release-or-suppress-case")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postActionThisCase: HttpRequestBuilder =
     http("POST Action liability case")
-      .post(operatorUiBaseUrl + s"/cases/$${liabilityCaseReference}/release-or-suppress-case")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .post(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/release-or-suppress-case")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("caseStatus", "release")
       .check(status.is(SEE_OTHER.code()))
 
   def getReleaseToAQueue: HttpRequestBuilder =
     http("GET Choose a team to release")
-      .get(operatorUiBaseUrl + s"/cases/$${liabilityCaseReference}/release")
+      .get(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/release")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postReleaseToAQueue: HttpRequestBuilder =
     http("POST Choose a team to release")
-      .post(operatorUiBaseUrl + s"/cases/$${liabilityCaseReference}/release")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .post(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/release")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("queue", "act")
       .check(status.is(SEE_OTHER.code()))
 
   def getReleaseConfirmation: HttpRequestBuilder =
     http("GET Release confirmation")
-      .get(operatorUiBaseUrl + s"/cases/$${liabilityCaseReference}/release/confirmation")
+      .get(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/release/confirmation")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
@@ -92,47 +92,47 @@ object LiabilityRequest extends DigitalTariffsPerformanceTestRunner with Request
 
   def getAssignCase: HttpRequestBuilder =
     http("GET Assign a case")
-      .get(operatorUiBaseUrl + s"/cases/$${liabilityCaseReference}/assign")
+      .get(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/assign")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postAssignCase: HttpRequestBuilder =
     http("POST Assign a case")
-      .post(operatorUiBaseUrl + s"/cases/$${liabilityCaseReference}/assign")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .post(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/assign")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("state", "true")
       .check(status.is(SEE_OTHER.code()))
 
   def getChangeCaseStatusRefer: HttpRequestBuilder =
     http("GET Change a case status")
-      .get(operatorUiBaseUrl + s"/cases/$${liabilityCaseReference}/change-case-status")
+      .get(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/change-case-status")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postChangeCaseStatusRefer: HttpRequestBuilder =
     http("POST Change a case status")
-      .post(operatorUiBaseUrl + s"/cases/$${liabilityCaseReference}/change-case-status")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .post(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/change-case-status")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("caseStatus", "refer")
       .check(status.is(SEE_OTHER.code()))
 
   def getReferCase: HttpRequestBuilder =
     http("GET Refer a case")
-      .get(operatorUiBaseUrl + s"/cases/$${liabilityCaseReference}/refer-reason")
+      .get(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/refer-reason")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postReferCase: HttpRequestBuilder =
     http("POST Refer a case")
-      .post(operatorUiBaseUrl + s"/cases/$${liabilityCaseReference}/refer-reason")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .post(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/refer-reason")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("referredTo", "Laboratory analyst")
       .formParam("note", "A note from me")
       .check(status.is(SEE_OTHER.code()))
 
   def getFileUpload: HttpRequestBuilder =
     http("GET Upload file refer case")
-      .get(operatorUiBaseUrl + s"/cases/$${liabilityCaseReference}/refer-email")
+      .get(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/refer-email")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
       .check(saveFileUploadurl)
@@ -157,28 +157,28 @@ object LiabilityRequest extends DigitalTariffsPerformanceTestRunner with Request
       .post("https://www.staging.upscan.tax.service.gov.uk/v1/uploads/fus-inbound-830f78e090fe8aec00891405dfc14824")
       .header("content-type", "multipart/form-data; boundary=----WebKitFormBoundaryA81LRm2SGmby4vFN")
       .asMultipartForm
-      .bodyPart(StringBodyPart("success_action_redirect", "${successRedirect}"))
-      .bodyPart(StringBodyPart("error_action_redirect", "${errorRedirect}"))
-      .bodyPart(StringBodyPart("x-amz-meta-callback-url", "${callBack}"))
-      .bodyPart(StringBodyPart("x-amz-date", "${amazonDate}"))
-      .bodyPart(StringBodyPart("x-amz-credential", "${amazonCredential}"))
-      .bodyPart(StringBodyPart("x-amz-meta-upscan-initiate-response", "${upscanInitiateResponse}"))
-      .bodyPart(StringBodyPart("x-amz-meta-upscan-initiate-received", "${upscanInitiateReceived}"))
-      .bodyPart(StringBodyPart("x-amz-meta-request-id", "${amazonMetaRequestID}"))
-      .bodyPart(StringBodyPart("x-amz-algorithm", "${amazonAlgorithm}"))
-      .bodyPart(StringBodyPart("key", "${key}"))
+      .bodyPart(StringBodyPart("success_action_redirect", "#{successRedirect}"))
+      .bodyPart(StringBodyPart("error_action_redirect", "#{errorRedirect}"))
+      .bodyPart(StringBodyPart("x-amz-meta-callback-url", "#{callBack}"))
+      .bodyPart(StringBodyPart("x-amz-date", "#{amazonDate}"))
+      .bodyPart(StringBodyPart("x-amz-credential", "#{amazonCredential}"))
+      .bodyPart(StringBodyPart("x-amz-meta-upscan-initiate-response", "#{upscanInitiateResponse}"))
+      .bodyPart(StringBodyPart("x-amz-meta-upscan-initiate-received", "#{upscanInitiateReceived}"))
+      .bodyPart(StringBodyPart("x-amz-meta-request-id", "#{amazonMetaRequestID}"))
+      .bodyPart(StringBodyPart("x-amz-algorithm", "#{amazonAlgorithm}"))
+      .bodyPart(StringBodyPart("key", "#{key}"))
       .bodyPart(StringBodyPart("acl", "private"))
-      .bodyPart(StringBodyPart("x-amz-signature", "${amazonSignature}"))
-      .bodyPart(StringBodyPart("x-amz-meta-session-id", "${amazonMetaSessionID}"))
+      .bodyPart(StringBodyPart("x-amz-signature", "#{amazonSignature}"))
+      .bodyPart(StringBodyPart("x-amz-meta-session-id", "#{amazonMetaSessionID}"))
       .bodyPart(StringBodyPart("x-amz-meta-consuming-service", "binding-tariff-filestore"))
-      .bodyPart(StringBodyPart("policy", "${policy}"))
+      .bodyPart(StringBodyPart("policy", "#{policy}"))
       .bodyPart(RawFileBodyPart("file", file))
       .check(status.is(SEE_OTHER.code()))
   }
 
   def getReferConfirmation: HttpRequestBuilder =
     http("GET Case referred confirmation")
-      .get(operatorUiBaseUrl + s"/cases/$${liabilityCaseReference}/refer/confirmation")
+      .get(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/refer/confirmation")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 }

@@ -33,7 +33,7 @@ trait DigitalTariffsPerformanceTestRunner extends ServicesConfiguration {
 
   val eoriNumber = "AA000111222"
 
-  def saveCsrfToken: CheckBuilder[RegexCheckType, String, String] =
+  def saveCsrfToken: CheckBuilder[RegexCheckType, String] =
     regex(_ => csrfPattern).saveAs("csrfToken")
 
   private val csrfPattern = """<input type="hidden" name="csrfToken" value="([^"]+)"""
