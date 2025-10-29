@@ -46,13 +46,13 @@ object StrideAuthRequests extends DigitalTariffsPerformanceTestRunner {
   val getStrideSignIn: HttpRequestBuilder =
     if (runLocal) {
       http("GET redirect to STRIDE Auth")
-        .get(s"$${protectedPageRedirect}")
+        .get("#{protectedPageRedirect}")
         .disableFollowRedirect
         .check(status.is(SEE_OTHER.code()))
         .check(header("location").saveAs("authRequestRedirect"))
     } else {
       http("GET redirect to STRIDE Auth")
-        .get(baseUrlFor("tariff-classification-frontend") + s"$${protectedPageRedirect}")
+        .get(baseUrlFor("tariff-classification-frontend") + "#{protectedPageRedirect}")
         .disableFollowRedirect
         .check(status.is(SEE_OTHER.code()))
         .check(header("location").saveAs("authRequestRedirect"))
@@ -60,16 +60,16 @@ object StrideAuthRequests extends DigitalTariffsPerformanceTestRunner {
 
   val getIdpSignInPage: HttpRequestBuilder =
     http("GET Stride Auth redirect to IdP login")
-      .get(s"$${authRequestRedirect}")
+      .get("#{authRequestRedirect}")
       .check(status.is(OK.code()))
       .check(savePageItem("relayState", relayStatePattern))
       .check(savePageItem("formUrl", formUrlPattern))
 
   val postIdpSignInPage: HttpRequestBuilder =
     http("POST Stride Auth IdP login form")
-      .post(s"$strideIdpBaseUrl$${formUrl}")
+      .post(s"$strideIdpBaseUrl#{formUrl}")
       .disableFollowRedirect
-      .formParam("RelayState", s"$${relayState}")
+      .formParam("RelayState", "#{relayState}")
       .formParam("pid", "12345")
       .formParam("status", true)
       .formParam("signature", "valid")
@@ -79,7 +79,7 @@ object StrideAuthRequests extends DigitalTariffsPerformanceTestRunner {
 
   val getSignInRedirect: HttpRequestBuilder =
     http("GET page w/ JS redirect to STRIDE Auth")
-      .get(s"$strideIdpBaseUrl$${signInRedirect}")
+      .get(s"$strideIdpBaseUrl#{signInRedirect}")
       .check(status.is(OK.code()))
       .check(savePageItem("formUrl", formUrlPattern))
       .check(savePageItem("samlResponse", samlResponsePattern))
@@ -87,10 +87,10 @@ object StrideAuthRequests extends DigitalTariffsPerformanceTestRunner {
 
   val postIdpResponseToStride: HttpRequestBuilder =
     http("POST IdP response to STRIDE Auth")
-      .post(s"$${formUrl}")
+      .post("#{formUrl}")
       .disableFollowRedirect
-      .formParam("SAMLResponse", s"$${samlResponse}")
-      .formParam("RelayState", s"$${relayState}")
+      .formParam("SAMLResponse", "#{samlResponse}")
+      .formParam("RelayState", "#{relayState}")
       .check(status.is(SEE_OTHER.code()))
       .check(header("location").saveAs("loginRedirect"))
 }

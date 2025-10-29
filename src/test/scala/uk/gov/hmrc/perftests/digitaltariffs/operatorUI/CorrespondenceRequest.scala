@@ -44,7 +44,7 @@ object CorrespondenceRequest extends DigitalTariffsPerformanceTestRunner with Re
   def postCreateNewCorrespondenceCase: HttpRequestBuilder =
     http("POST Create A NEW Correspondence")
       .post(s"$operatorUiBaseUrl/new-correspondence")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("summary", "Case Description")
       .formParam("source", "a trader")
       .formParam("contactEmail", "abv@abv.com")
@@ -53,35 +53,35 @@ object CorrespondenceRequest extends DigitalTariffsPerformanceTestRunner with Re
 
   def getReleaseCorrespondenceCase: HttpRequestBuilder =
     http("GET Release NEW Correspondence Case")
-      .get(s"${baseUrlFor("tariff-classification-frontend")}/$${caseRefUrl}")
+      .get(s"${baseUrlFor("tariff-classification-frontend")}/#{caseRefUrl}")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
       .check(getCaseReference)
 
   def postReleaseCorrespondenceCase: HttpRequestBuilder =
     http("POST Release NEW Correspondence Case")
-      .post(operatorUiBaseUrl + s"/release-correspondence-choice?reference=$${correspondenceCaseReference}")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .post(operatorUiBaseUrl + "/release-correspondence-choice?reference=#{correspondenceCaseReference}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("choice", "Yes")
       .check(status.is(SEE_OTHER.code()))
 
   def getChooseReleaseTeam: HttpRequestBuilder =
     http("GET Release to a team")
-      .get(operatorUiBaseUrl + s"/cases/$${correspondenceCaseReference}/release")
+      .get(operatorUiBaseUrl + "/cases/#{correspondenceCaseReference}/release")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postChooseReleaseTeam: HttpRequestBuilder =
     http("POST Release to a team")
-      .post(operatorUiBaseUrl + s"/cases/$${correspondenceCaseReference}/release")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .post(operatorUiBaseUrl + "/cases/#{correspondenceCaseReference}/release")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("queue", "flex")
       .check(status.is(SEE_OTHER.code()))
       .check(header("location").saveAs("relativeCaseReleasedConfirmationUrl"))
 
   def getCaseReleasedConfirmation: HttpRequestBuilder =
     http("GET Case release confirmation")
-      .get(operatorUiBaseUrl + s"/cases/$${correspondenceCaseReference}/release/confirmation")
+      .get(operatorUiBaseUrl + "/cases/#{correspondenceCaseReference}/release/confirmation")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 

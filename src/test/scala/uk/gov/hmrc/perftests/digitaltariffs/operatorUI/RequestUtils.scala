@@ -44,55 +44,55 @@ trait RequestUtils {
   private val metaRequestIDPattern    = """name="x-amz-meta-request-id" value="(.*?)""""
   private val metaSesssionIDPattern   = """name="x-amz-meta-session-id" value="(.*?)""""
 
-  def saveSuccessRedirect: CheckBuilder[RegexCheckType, String, String] =
+  def saveSuccessRedirect: CheckBuilder[RegexCheckType, String] =
     regex(successRedirectPattern).saveAs("successRedirect")
 
-  def saveErrorRedirect: CheckBuilder[RegexCheckType, String, String] =
+  def saveErrorRedirect: CheckBuilder[RegexCheckType, String] =
     regex(errorRedirectPattern).saveAs("errorRedirect")
 
-  def saveFileUploadurl: CheckBuilder[RegexCheckType, String, String] =
+  def saveFileUploadurl: CheckBuilder[RegexCheckType, String] =
     regex(amazonUrlPattern).saveAs("fileUploadAmazonUrl")
 
-  def saveCallBack: CheckBuilder[RegexCheckType, String, String] =
+  def saveCallBack: CheckBuilder[RegexCheckType, String] =
     regex(callBackUrPattern).saveAs("callBack")
 
-  def saveReference: CheckBuilder[RegexCheckType, String, String] =
+  def saveReference: CheckBuilder[RegexCheckType, String] =
     regex(referencePattern).saveAs("reference")
 
-  def saveFileType: CheckBuilder[RegexCheckType, String, String] =
+  def saveFileType: CheckBuilder[RegexCheckType, String] =
     regex(fileTypePattern).saveAs("fileType")
 
-  def saveAmazonDate: CheckBuilder[RegexCheckType, String, String] =
+  def saveAmazonDate: CheckBuilder[RegexCheckType, String] =
     regex(amzDatePattern).saveAs("amazonDate")
 
-  def saveAmazonCredential: CheckBuilder[RegexCheckType, String, String] =
+  def saveAmazonCredential: CheckBuilder[RegexCheckType, String] =
     regex(credentialPattern).saveAs("amazonCredential")
 
-  def saveUpscanIniateResponse: CheckBuilder[RegexCheckType, String, String] =
+  def saveUpscanIniateResponse: CheckBuilder[RegexCheckType, String] =
     regex(initiateResponsePattern).saveAs("upscanInitiateResponse")
 
-  def saveUpscanInitiateRecieved: CheckBuilder[RegexCheckType, String, String] =
+  def saveUpscanInitiateRecieved: CheckBuilder[RegexCheckType, String] =
     regex(initiateReceivedPattern).saveAs("upscanInitiateReceived")
 
-  def saveAmazonMetaOriginalFileName: CheckBuilder[RegexCheckType, String, String] =
+  def saveAmazonMetaOriginalFileName: CheckBuilder[RegexCheckType, String] =
     regex(metaOriginalFilename).saveAs("amazonMetaOriginalFileName")
 
-  def saveAmazonAlgorithm: CheckBuilder[RegexCheckType, String, String] =
+  def saveAmazonAlgorithm: CheckBuilder[RegexCheckType, String] =
     regex(algorithmPattern).saveAs("amazonAlgorithm")
 
-  def saveKey: CheckBuilder[RegexCheckType, String, String] =
+  def saveKey: CheckBuilder[RegexCheckType, String] =
     regex(keyPattern).saveAs("key")
 
-  def saveAmazonSignature: CheckBuilder[RegexCheckType, String, String] =
+  def saveAmazonSignature: CheckBuilder[RegexCheckType, String] =
     regex(signaturePattern).saveAs("amazonSignature")
 
-  def saveAMZMetaRequestId: CheckBuilder[RegexCheckType, String, String] =
+  def saveAMZMetaRequestId: CheckBuilder[RegexCheckType, String] =
     regex(metaRequestIDPattern).saveAs("amazonMetaRequestID")
 
-  def saveAMZMetaSessionId: CheckBuilder[RegexCheckType, String, String] =
+  def saveAMZMetaSessionId: CheckBuilder[RegexCheckType, String] =
     regex(metaSesssionIDPattern).saveAs("amazonMetaSessionID")
 
-  def savePolicy: CheckBuilder[RegexCheckType, String, String] =
+  def savePolicy: CheckBuilder[RegexCheckType, String] =
     regex(policyPattern).saveAs("policy")
 
 }

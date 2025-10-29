@@ -48,7 +48,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postGoodsName: HttpRequestBuilder =
     http("POST Provide a name for the goods page")
       .post(s"$traderUiBaseUrl/provide-goods-name")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("goodsName", "Snow man jacket")
       .check(status.is(SEE_OTHER.code()))
 
@@ -61,7 +61,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postGoodsDescription: HttpRequestBuilder =
     http("POST Provide a detailed description page")
       .post(s"$traderUiBaseUrl/provide-goods-description")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("goodsDescription", "Snow man jacket in black colour")
       .check(status.is(SEE_OTHER.code()))
 
@@ -74,7 +74,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postConfidentialInfo: HttpRequestBuilder =
     http("POST Add confidential information page")
       .post(s"$traderUiBaseUrl/add-confidential-information")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("value", "false")
       .check(status.is(SEE_OTHER.code()))
 
@@ -87,7 +87,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postUploadSupportingDocument: HttpRequestBuilder =
     http("POST Do you want to upload any supporting documents?")
       .post(s"$traderUiBaseUrl/add-supporting-documents")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("value", "false") // for simplicity we do not send files in Jenkins
       .check(status.is(SEE_OTHER.code()))
 
@@ -100,7 +100,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postAreYouSendingASample: HttpRequestBuilder =
     http("POST Are you sending a sample page")
       .post(s"$traderUiBaseUrl/are-you-sending-samples")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("value", "false")
       .check(status.is(SEE_OTHER.code()))
 
@@ -113,7 +113,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postHaveYouFoundCommodityCode: HttpRequestBuilder =
     http("Have you found a commodity code")
       .post(s"$traderUiBaseUrl/have-you-found-commodity-code")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("value", "false")
       .check(status.is(SEE_OTHER.code()))
 
@@ -126,7 +126,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postLegalChallenge: HttpRequestBuilder =
     http("POST Legal challenges page")
       .post(s"$traderUiBaseUrl/any-legal-challenges-classifying-goods")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("value", "false")
       .check(status.is(SEE_OTHER.code()))
 
@@ -139,7 +139,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postPreviousRulingReference: HttpRequestBuilder =
     http("POST Previous ruling reference page")
       .post(s"$traderUiBaseUrl/previous-ruling-reference")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("value", "false")
       .check(status.is(SEE_OTHER.code()))
 
@@ -152,7 +152,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postSimilarRuling: HttpRequestBuilder =
     http("POST Similar goods page")
       .post(s"$traderUiBaseUrl/ruling-on-similar-goods")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("value", "false")
       .check(status.is(SEE_OTHER.code()))
 
@@ -167,7 +167,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
       .post(s"$traderUiBaseUrl/provide-registered-eori-details")
       .formParamSeq(
         Seq(
-          "csrfToken"    -> s"$${csrfToken}",
+          "csrfToken"    -> "#{csrfToken}",
           "eori"         -> s"$eoriNumber",
           "businessName" -> "Digital Tariffs Limited Company",
           "addressLine1" -> "Victoria Road 10",
@@ -187,7 +187,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postEnterContactDetails: HttpRequestBuilder =
     http("POST Provide the contact details")
       .post(s"$traderUiBaseUrl/provide-contact-details")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("name", "Joe Bloggs")
       .formParam("email", "joe.bloggs@example.sh")
       .formParam("phoneNumber", "0123456789")
@@ -202,7 +202,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postCheckYourAnswers: HttpRequestBuilder =
     http("POST Check Your Answers")
       .post(s"$traderUiBaseUrl/check-your-answers")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .check(status.is(SEE_OTHER.code()))
 
   def getConfirmationPage: HttpRequestBuilder =

@@ -33,7 +33,7 @@ object AuthRequests extends DigitalTariffsPerformanceTestRunner {
   def postAuthLoginStub: HttpRequestBuilder =
     http("POST Auth Login Stub Sign In")
       .post(s"$authStubBaseUrl/gg-sign-in")
-      .formParam("csrfToken", "${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("authorityId", "")
       .formParam("gatewayToken", "")
       .formParam("redirectionUrl", s"$traderUiBaseUrl/applications-and-rulings")

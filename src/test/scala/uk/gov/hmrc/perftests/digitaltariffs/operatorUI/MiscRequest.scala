@@ -39,7 +39,7 @@ object MiscRequest extends DigitalTariffsPerformanceTestRunner with RequestUtils
   def postCreateNewMiscCase: HttpRequestBuilder =
     http("POST Create a Misc case")
       .post(s"$operatorUiBaseUrl/create-new-miscellaneous")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("name", "Misc Description")
       .formParam("contactName", "Contact Name")
       .formParam("caseType", "IB")
@@ -48,20 +48,20 @@ object MiscRequest extends DigitalTariffsPerformanceTestRunner with RequestUtils
 
   def getMiscChooseReleaseTeam: HttpRequestBuilder =
     http("GET Release Misc Case to a team")
-      .get(operatorUiBaseUrl + s"/cases/$${miscCaseReference}/release")
+      .get(operatorUiBaseUrl + "/cases/#{miscCaseReference}/release")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 
   def postMiscChooseReleaseTeam: HttpRequestBuilder =
     http("POST Release to a team")
-      .post(operatorUiBaseUrl + s"/cases/$${miscCaseReference}/release")
-      .formParam("csrfToken", s"$${csrfToken}")
+      .post(operatorUiBaseUrl + "/cases/#{miscCaseReference}/release")
+      .formParam("csrfToken", "#{csrfToken}")
       .formParam("queue", "flex")
       .check(status.is(SEE_OTHER.code()))
 
   def getMiscCaseReleasedConfirmation: HttpRequestBuilder =
     http("GET Case release confirmation")
-      .get(operatorUiBaseUrl + s"/cases/$${miscCaseReference}/release/confirmation")
+      .get(operatorUiBaseUrl + "/cases/#{miscCaseReference}/release/confirmation")
       .check(status.is(OK.code()))
       .check(saveCsrfToken)
 }
