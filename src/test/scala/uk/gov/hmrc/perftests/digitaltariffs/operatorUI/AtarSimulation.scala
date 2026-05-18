@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -171,13 +171,13 @@ class AtarSimulation extends PerformanceTestRunner with DigitalTariffsPerformanc
     )
 
   setup("liability", "Liability")
-    .withRequests(liabilityRequests: _*)
+    .withRequests(liabilityRequests *)
 
   setup("correspondence", "Correspondence")
-    .withRequests(correspondenceRequests: _*)
+    .withRequests(correspondenceRequests *)
 
   setup("misc", "Misc")
-    .withRequests(miscCaseRequests: _*)
+    .withRequests(miscCaseRequests *)
 
   runSimulation()
 }

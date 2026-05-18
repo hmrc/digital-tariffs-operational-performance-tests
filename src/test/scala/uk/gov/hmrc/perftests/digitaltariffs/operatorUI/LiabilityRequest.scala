@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import io.netty.handler.codec.http.HttpResponseStatus._
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
+import io.gatling.core.session.StaticValueExpression
 
 object LiabilityRequest extends DigitalTariffsPerformanceTestRunner with RequestUtils {
 
@@ -39,12 +40,12 @@ object LiabilityRequest extends DigitalTariffsPerformanceTestRunner with Request
   def postNewLiability: HttpRequestBuilder =
     http("POST Post-New liability information")
       .post(s"$operatorUiBaseUrl/new-liability")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("item-name", "Unique Performance Test Liability")
-      .formParam("trader-name", "Unique PT Trader Joe")
-      .formParam("liability-status", "LIVE")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("item-name", StaticValueExpression("Unique Performance Test Liability"))
+      .formParam("trader-name", StaticValueExpression("Unique PT Trader Joe"))
+      .formParam("liability-status", StaticValueExpression("LIVE"))
       .check(status.is(SEE_OTHER.code()))
-      .check(header("location").transform(extractNumbers).saveAs("liabilityCaseReference"))
+      .check(header(StaticValueExpression("location")).transform(extractNumbers).saveAs("liabilityCaseReference"))
 
   def getLiabilityCase: HttpRequestBuilder =
     http("GET Liability page")
@@ -61,8 +62,8 @@ object LiabilityRequest extends DigitalTariffsPerformanceTestRunner with Request
   def postActionThisCase: HttpRequestBuilder =
     http("POST Action liability case")
       .post(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/release-or-suppress-case")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("caseStatus", "release")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("caseStatus", StaticValueExpression("release"))
       .check(status.is(SEE_OTHER.code()))
 
   def getReleaseToAQueue: HttpRequestBuilder =
@@ -74,8 +75,8 @@ object LiabilityRequest extends DigitalTariffsPerformanceTestRunner with Request
   def postReleaseToAQueue: HttpRequestBuilder =
     http("POST Choose a team to release")
       .post(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/release")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("queue", "act")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("queue", StaticValueExpression("act"))
       .check(status.is(SEE_OTHER.code()))
 
   def getReleaseConfirmation: HttpRequestBuilder =
@@ -99,8 +100,8 @@ object LiabilityRequest extends DigitalTariffsPerformanceTestRunner with Request
   def postAssignCase: HttpRequestBuilder =
     http("POST Assign a case")
       .post(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/assign")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("state", "true")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("state", StaticValueExpression("true"))
       .check(status.is(SEE_OTHER.code()))
 
   def getChangeCaseStatusRefer: HttpRequestBuilder =
@@ -112,8 +113,8 @@ object LiabilityRequest extends DigitalTariffsPerformanceTestRunner with Request
   def postChangeCaseStatusRefer: HttpRequestBuilder =
     http("POST Change a case status")
       .post(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/change-case-status")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("caseStatus", "refer")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("caseStatus", StaticValueExpression("refer"))
       .check(status.is(SEE_OTHER.code()))
 
   def getReferCase: HttpRequestBuilder =
@@ -125,9 +126,9 @@ object LiabilityRequest extends DigitalTariffsPerformanceTestRunner with Request
   def postReferCase: HttpRequestBuilder =
     http("POST Refer a case")
       .post(operatorUiBaseUrl + "/cases/#{liabilityCaseReference}/refer-reason")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("referredTo", "Laboratory analyst")
-      .formParam("note", "A note from me")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("referredTo", StaticValueExpression("Laboratory analyst"))
+      .formParam("note", StaticValueExpression("A note from me"))
       .check(status.is(SEE_OTHER.code()))
 
   def getFileUpload: HttpRequestBuilder =

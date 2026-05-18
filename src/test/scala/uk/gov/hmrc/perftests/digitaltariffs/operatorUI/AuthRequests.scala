@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import io.netty.handler.codec.http.HttpResponseStatus._
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
+import io.gatling.core.session.StaticValueExpression
 
 object AuthRequests extends DigitalTariffsPerformanceTestRunner {
 
@@ -33,19 +34,19 @@ object AuthRequests extends DigitalTariffsPerformanceTestRunner {
   def postAuthLoginStub: HttpRequestBuilder =
     http("POST Auth Login Stub Sign In")
       .post(s"$authStubBaseUrl/gg-sign-in")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("authorityId", "")
-      .formParam("gatewayToken", "")
-      .formParam("redirectionUrl", s"$traderUiBaseUrl/applications-and-rulings")
-      .formParam("credentialStrength", "strong")
-      .formParam("confidenceLevel", "50")
-      .formParam("affinityGroup", "Individual")
-      .formParam("email", "user@test.com")
-      .formParam("credentialRole", "User")
-      .formParam("additionalInfo.emailVerified", "N/A")
-      .formParam("enrolment[0].name", "HMRC-ATAR-ORG")
-      .formParam("enrolment[0].taxIdentifier[0].name", "EORINumber")
-      .formParam("enrolment[0].taxIdentifier[0].value", eoriNumber)
-      .formParam("enrolment[0].state", "Activated")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("authorityId", StaticValueExpression(""))
+      .formParam("gatewayToken", StaticValueExpression(""))
+      .formParam("redirectionUrl", StaticValueExpression(s"$traderUiBaseUrl/applications-and-rulings"))
+      .formParam("credentialStrength", StaticValueExpression("strong"))
+      .formParam("confidenceLevel", StaticValueExpression("50"))
+      .formParam("affinityGroup", StaticValueExpression("Individual"))
+      .formParam("email", StaticValueExpression("user@test.com"))
+      .formParam("credentialRole", StaticValueExpression("User"))
+      .formParam("additionalInfo.emailVerified", StaticValueExpression("N/A"))
+      .formParam("enrolment[0].name", StaticValueExpression("HMRC-ATAR-ORG"))
+      .formParam("enrolment[0].taxIdentifier[0].name", StaticValueExpression("EORINumber"))
+      .formParam("enrolment[0].taxIdentifier[0].value", StaticValueExpression(eoriNumber))
+      .formParam("enrolment[0].state", StaticValueExpression("Activated"))
       .check(status.is(SEE_OTHER.code()))
 }

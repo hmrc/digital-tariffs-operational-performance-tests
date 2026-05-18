@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import io.netty.handler.codec.http.HttpResponseStatus._
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
+import io.gatling.core.session.StaticValueExpression
 
 object CorrespondenceRequest extends DigitalTariffsPerformanceTestRunner with RequestUtils {
 
@@ -44,12 +45,12 @@ object CorrespondenceRequest extends DigitalTariffsPerformanceTestRunner with Re
   def postCreateNewCorrespondenceCase: HttpRequestBuilder =
     http("POST Create A NEW Correspondence")
       .post(s"$operatorUiBaseUrl/new-correspondence")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("summary", "Case Description")
-      .formParam("source", "a trader")
-      .formParam("contactEmail", "abv@abv.com")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("summary", StaticValueExpression("Case Description"))
+      .formParam("source", StaticValueExpression("a trader"))
+      .formParam("contactEmail", StaticValueExpression("abv@abv.com"))
       .check(status.is(SEE_OTHER.code()))
-      .check(header("location").saveAs("caseRefUrl"))
+      .check(header(StaticValueExpression("location")).saveAs("caseRefUrl"))
 
   def getReleaseCorrespondenceCase: HttpRequestBuilder =
     http("GET Release NEW Correspondence Case")
@@ -61,8 +62,8 @@ object CorrespondenceRequest extends DigitalTariffsPerformanceTestRunner with Re
   def postReleaseCorrespondenceCase: HttpRequestBuilder =
     http("POST Release NEW Correspondence Case")
       .post(operatorUiBaseUrl + "/release-correspondence-choice?reference=#{correspondenceCaseReference}")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("choice", "Yes")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("choice", StaticValueExpression("Yes"))
       .check(status.is(SEE_OTHER.code()))
 
   def getChooseReleaseTeam: HttpRequestBuilder =
@@ -74,10 +75,10 @@ object CorrespondenceRequest extends DigitalTariffsPerformanceTestRunner with Re
   def postChooseReleaseTeam: HttpRequestBuilder =
     http("POST Release to a team")
       .post(operatorUiBaseUrl + "/cases/#{correspondenceCaseReference}/release")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("queue", "flex")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("queue", StaticValueExpression("flex"))
       .check(status.is(SEE_OTHER.code()))
-      .check(header("location").saveAs("relativeCaseReleasedConfirmationUrl"))
+      .check(header(StaticValueExpression("location")).saveAs("relativeCaseReleasedConfirmationUrl"))
 
   def getCaseReleasedConfirmation: HttpRequestBuilder =
     http("GET Case release confirmation")

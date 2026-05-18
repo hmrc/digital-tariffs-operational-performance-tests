@@ -1,4 +1,4 @@
-ThisBuild / scalaVersion := "2.13.16"
+ThisBuild / scalaVersion := "3.7.3"
 
 lazy val root = (project in file("."))
   .enablePlugins(GatlingPlugin)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import io.netty.handler.codec.http.HttpResponseStatus._
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
+import io.gatling.core.session.StaticValueExpression
 
 object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with RequestUtils {
 
@@ -48,8 +49,8 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postGoodsName: HttpRequestBuilder =
     http("POST Provide a name for the goods page")
       .post(s"$traderUiBaseUrl/provide-goods-name")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("goodsName", "Snow man jacket")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("goodsName", StaticValueExpression("Snow man jacket"))
       .check(status.is(SEE_OTHER.code()))
 
   def getGoodsDescription: HttpRequestBuilder =
@@ -61,8 +62,8 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postGoodsDescription: HttpRequestBuilder =
     http("POST Provide a detailed description page")
       .post(s"$traderUiBaseUrl/provide-goods-description")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("goodsDescription", "Snow man jacket in black colour")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("goodsDescription", StaticValueExpression("Snow man jacket in black colour"))
       .check(status.is(SEE_OTHER.code()))
 
   def getConfidentialInfo: HttpRequestBuilder =
@@ -74,8 +75,8 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postConfidentialInfo: HttpRequestBuilder =
     http("POST Add confidential information page")
       .post(s"$traderUiBaseUrl/add-confidential-information")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("value", "false")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("value", StaticValueExpression("false"))
       .check(status.is(SEE_OTHER.code()))
 
   def getUploadSupportingDocument: HttpRequestBuilder =
@@ -87,8 +88,8 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postUploadSupportingDocument: HttpRequestBuilder =
     http("POST Do you want to upload any supporting documents?")
       .post(s"$traderUiBaseUrl/add-supporting-documents")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("value", "false") // for simplicity we do not send files in Jenkins
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("value", StaticValueExpression("false")) // for simplicity we do not send files in Jenkins
       .check(status.is(SEE_OTHER.code()))
 
   def getAreYouSendingASample: HttpRequestBuilder =
@@ -100,8 +101,8 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postAreYouSendingASample: HttpRequestBuilder =
     http("POST Are you sending a sample page")
       .post(s"$traderUiBaseUrl/are-you-sending-samples")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("value", "false")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("value", StaticValueExpression("false"))
       .check(status.is(SEE_OTHER.code()))
 
   def getHaveYouFoundCommodityCode: HttpRequestBuilder =
@@ -113,8 +114,8 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postHaveYouFoundCommodityCode: HttpRequestBuilder =
     http("Have you found a commodity code")
       .post(s"$traderUiBaseUrl/have-you-found-commodity-code")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("value", "false")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("value", StaticValueExpression("false"))
       .check(status.is(SEE_OTHER.code()))
 
   def getLegalChallenge: HttpRequestBuilder =
@@ -126,8 +127,8 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postLegalChallenge: HttpRequestBuilder =
     http("POST Legal challenges page")
       .post(s"$traderUiBaseUrl/any-legal-challenges-classifying-goods")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("value", "false")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("value", StaticValueExpression("false"))
       .check(status.is(SEE_OTHER.code()))
 
   def getPreviousRulingReference: HttpRequestBuilder =
@@ -139,8 +140,8 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postPreviousRulingReference: HttpRequestBuilder =
     http("POST Previous ruling reference page")
       .post(s"$traderUiBaseUrl/previous-ruling-reference")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("value", "false")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("value", StaticValueExpression("false"))
       .check(status.is(SEE_OTHER.code()))
 
   def getSimilarRuling: HttpRequestBuilder =
@@ -152,8 +153,8 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postSimilarRuling: HttpRequestBuilder =
     http("POST Similar goods page")
       .post(s"$traderUiBaseUrl/ruling-on-similar-goods")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("value", "false")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("value", StaticValueExpression("false"))
       .check(status.is(SEE_OTHER.code()))
 
   def getRegisterForEori: HttpRequestBuilder =
@@ -187,10 +188,10 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postEnterContactDetails: HttpRequestBuilder =
     http("POST Provide the contact details")
       .post(s"$traderUiBaseUrl/provide-contact-details")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("name", "Joe Bloggs")
-      .formParam("email", "joe.bloggs@example.sh")
-      .formParam("phoneNumber", "0123456789")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("name", StaticValueExpression("Joe Bloggs"))
+      .formParam("email", StaticValueExpression("joe.bloggs@example.sh"))
+      .formParam("phoneNumber", StaticValueExpression("0123456789"))
       .check(status.is(SEE_OTHER.code()))
 
   def getCheckYourAnswers: HttpRequestBuilder =
@@ -202,7 +203,7 @@ object TraderUiRequests extends DigitalTariffsPerformanceTestRunner with Request
   def postCheckYourAnswers: HttpRequestBuilder =
     http("POST Check Your Answers")
       .post(s"$traderUiBaseUrl/check-your-answers")
-      .formParam("csrfToken", "#{csrfToken}")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
       .check(status.is(SEE_OTHER.code()))
 
   def getConfirmationPage: HttpRequestBuilder =

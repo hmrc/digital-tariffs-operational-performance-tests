@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import io.netty.handler.codec.http.HttpResponseStatus._
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
+import io.gatling.core.session.StaticValueExpression
 
 object AtarRequests extends DigitalTariffsPerformanceTestRunner with RequestUtils {
 
@@ -54,8 +55,8 @@ object AtarRequests extends DigitalTariffsPerformanceTestRunner with RequestUtil
   def postReleaseOrSuppressAtarCase: HttpRequestBuilder =
     http("POST Action Atar release or suppress case")
       .post(operatorUiBaseUrl + "/cases/#{atarCaseReference}/release-or-suppress-case")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("caseStatus", "release")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("caseStatus", StaticValueExpression("release"))
       .check(status.is(SEE_OTHER.code()))
 
   def getAtarReleaseToAQueue: HttpRequestBuilder =
@@ -67,8 +68,8 @@ object AtarRequests extends DigitalTariffsPerformanceTestRunner with RequestUtil
   def postAtarReleaseToAQueue: HttpRequestBuilder =
     http("POST Choose a team to release")
       .post(operatorUiBaseUrl + "/cases/#{atarCaseReference}/release")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("queue", "act")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("queue", StaticValueExpression("act"))
       .check(status.is(SEE_OTHER.code()))
 
   def getAtarReleaseConfirmation: HttpRequestBuilder =
@@ -92,8 +93,8 @@ object AtarRequests extends DigitalTariffsPerformanceTestRunner with RequestUtil
   def postAtarAssignCase: HttpRequestBuilder =
     http("POST Assign a case")
       .post(operatorUiBaseUrl + "/cases/#{atarCaseReference}/assign")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("state", "true")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("state", StaticValueExpression("true"))
       .check(status.is(SEE_OTHER.code()))
 
   def getAtarChangeCaseStatusRefer: HttpRequestBuilder =
@@ -105,8 +106,8 @@ object AtarRequests extends DigitalTariffsPerformanceTestRunner with RequestUtil
   def postAtarChangeCaseStatusRefer: HttpRequestBuilder =
     http("POST Change a case status")
       .post(operatorUiBaseUrl + "/cases/#{atarCaseReference}/change-case-status")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("caseStatus", "refer")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("caseStatus", StaticValueExpression("refer"))
       .check(status.is(SEE_OTHER.code()))
 
   def getAtarReferCase: HttpRequestBuilder =
@@ -118,9 +119,9 @@ object AtarRequests extends DigitalTariffsPerformanceTestRunner with RequestUtil
   def postAtarReferCase: HttpRequestBuilder =
     http("POST Refer a case")
       .post(operatorUiBaseUrl + "/cases/#{atarCaseReference}/refer-reason")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("referredTo", "Laboratory analyst")
-      .formParam("note", "A note from me")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("referredTo", StaticValueExpression("Laboratory analyst"))
+      .formParam("note", StaticValueExpression("A note from me"))
       .check(status.is(SEE_OTHER.code()))
 
   def getAtarFileUpload: HttpRequestBuilder =

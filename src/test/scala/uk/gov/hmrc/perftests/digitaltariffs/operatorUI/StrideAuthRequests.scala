@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import io.netty.handler.codec.http.HttpResponseStatus._
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
+import io.gatling.core.session.StaticValueExpression
 
 object StrideAuthRequests extends DigitalTariffsPerformanceTestRunner {
 
@@ -41,7 +42,7 @@ object StrideAuthRequests extends DigitalTariffsPerformanceTestRunner {
       .get(operatorUiBaseUrl)
       .disableFollowRedirect
       .check(status.is(SEE_OTHER.code()))
-      .check(header("location").saveAs("protectedPageRedirect"))
+      .check(header(StaticValueExpression("location")).saveAs("protectedPageRedirect"))
 
   val getStrideSignIn: HttpRequestBuilder =
     if (runLocal) {
@@ -49,13 +50,13 @@ object StrideAuthRequests extends DigitalTariffsPerformanceTestRunner {
         .get("#{protectedPageRedirect}")
         .disableFollowRedirect
         .check(status.is(SEE_OTHER.code()))
-        .check(header("location").saveAs("authRequestRedirect"))
+        .check(header(StaticValueExpression("location")).saveAs("authRequestRedirect"))
     } else {
       http("GET redirect to STRIDE Auth")
         .get(baseUrlFor("tariff-classification-frontend") + "#{protectedPageRedirect}")
         .disableFollowRedirect
         .check(status.is(SEE_OTHER.code()))
-        .check(header("location").saveAs("authRequestRedirect"))
+        .check(header(StaticValueExpression("location")).saveAs("authRequestRedirect"))
     }
 
   val getIdpSignInPage: HttpRequestBuilder =
@@ -69,13 +70,13 @@ object StrideAuthRequests extends DigitalTariffsPerformanceTestRunner {
     http("POST Stride Auth IdP login form")
       .post(s"$strideIdpBaseUrl#{formUrl}")
       .disableFollowRedirect
-      .formParam("RelayState", "#{relayState}")
-      .formParam("pid", "12345")
+      .formParam("RelayState", session => session("relayState").as[String])
+      .formParam("pid", StaticValueExpression("12345"))
       .formParam("status", true)
-      .formParam("signature", "valid")
-      .formParam("roles", "classification")
+      .formParam("signature", StaticValueExpression("valid"))
+      .formParam("roles", StaticValueExpression("classification"))
       .check(status.is(SEE_OTHER.code()))
-      .check(header("location").saveAs("signInRedirect"))
+      .check(header(StaticValueExpression("location")).saveAs("signInRedirect"))
 
   val getSignInRedirect: HttpRequestBuilder =
     http("GET page w/ JS redirect to STRIDE Auth")
@@ -89,8 +90,8 @@ object StrideAuthRequests extends DigitalTariffsPerformanceTestRunner {
     http("POST IdP response to STRIDE Auth")
       .post("#{formUrl}")
       .disableFollowRedirect
-      .formParam("SAMLResponse", "#{samlResponse}")
-      .formParam("RelayState", "#{relayState}")
+      .formParam("SAMLResponse", session => session("samlResponse").as[String])
+      .formParam("RelayState", session => session("relayState").as[String])
       .check(status.is(SEE_OTHER.code()))
-      .check(header("location").saveAs("loginRedirect"))
+      .check(header(StaticValueExpression("location")).saveAs("loginRedirect"))
 }

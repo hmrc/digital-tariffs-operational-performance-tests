@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import io.netty.handler.codec.http.HttpResponseStatus._
 import uk.gov.hmrc.perftests.digitaltariffs.DigitalTariffsPerformanceTestRunner
+import io.gatling.core.session.StaticValueExpression
 
 object MiscRequest extends DigitalTariffsPerformanceTestRunner with RequestUtils {
 
@@ -39,12 +40,12 @@ object MiscRequest extends DigitalTariffsPerformanceTestRunner with RequestUtils
   def postCreateNewMiscCase: HttpRequestBuilder =
     http("POST Create a Misc case")
       .post(s"$operatorUiBaseUrl/create-new-miscellaneous")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("name", "Misc Description")
-      .formParam("contactName", "Contact Name")
-      .formParam("caseType", "IB")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("name", StaticValueExpression("Misc Description"))
+      .formParam("contactName", StaticValueExpression("Contact Name"))
+      .formParam("caseType", StaticValueExpression("IB"))
       .check(status.is(SEE_OTHER.code()))
-      .check(header("location").transform(extractNumbers).saveAs("miscCaseReference"))
+      .check(header(StaticValueExpression("location")).transform(extractNumbers).saveAs("miscCaseReference"))
 
   def getMiscChooseReleaseTeam: HttpRequestBuilder =
     http("GET Release Misc Case to a team")
@@ -55,8 +56,8 @@ object MiscRequest extends DigitalTariffsPerformanceTestRunner with RequestUtils
   def postMiscChooseReleaseTeam: HttpRequestBuilder =
     http("POST Release to a team")
       .post(operatorUiBaseUrl + "/cases/#{miscCaseReference}/release")
-      .formParam("csrfToken", "#{csrfToken}")
-      .formParam("queue", "flex")
+      .formParam("csrfToken", session => session("csrfToken").as[String])
+      .formParam("queue", StaticValueExpression("flex"))
       .check(status.is(SEE_OTHER.code()))
 
   def getMiscCaseReleasedConfirmation: HttpRequestBuilder =

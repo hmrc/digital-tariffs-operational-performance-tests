@@ -115,8 +115,6 @@ Run the following command:
 
 `sm2 --start DIGITAL_TARIFFS`
 
-`sm2 --start FEEDBACK_FRONTEND`
-
 ---
 
 ## Running the performance tests
