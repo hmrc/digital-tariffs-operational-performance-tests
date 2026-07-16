@@ -66,12 +66,12 @@ object StrideAuthRequests extends DigitalTariffsPerformanceTestRunner {
       .check(savePageItem("relayState", relayStatePattern))
       .check(savePageItem("formUrl", formUrlPattern))
 
-  val postIdpSignInPage: HttpRequestBuilder =
+  def postIdpSignInPage(pid: String): HttpRequestBuilder =
     http("POST Stride Auth IdP login form")
       .post(s"$strideIdpBaseUrl#{formUrl}")
       .disableFollowRedirect
       .formParam("RelayState", session => session("relayState").as[String])
-      .formParam("pid", StaticValueExpression("12345"))
+      .formParam("pid", StaticValueExpression(pid))
       .formParam("status", true)
       .formParam("signature", StaticValueExpression("valid"))
       .formParam("roles", StaticValueExpression("classification"))

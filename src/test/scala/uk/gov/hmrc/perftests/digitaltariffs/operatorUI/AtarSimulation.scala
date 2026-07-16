@@ -58,18 +58,18 @@ class AtarSimulation extends PerformanceTestRunner with DigitalTariffsPerformanc
     }
   }
 
-  val strideAuthSignInRequests: Seq[HttpRequestBuilder] =
+  def strideAuthSignInRequests(pid: String): Seq[HttpRequestBuilder] =
     Seq(
       getProtectedPageNoSession,
       getStrideSignIn,
       getIdpSignInPage,
-      postIdpSignInPage,
+      postIdpSignInPage(pid),
       getSignInRedirect,
       postIdpResponseToStride
     )
 
   val liabilityRequests: Seq[HttpRequestBuilder] =
-    strideAuthSignInRequests ++
+    strideAuthSignInRequests("12345") ++
       Seq(
         getStartPage,
         getOpenLiability,
@@ -86,7 +86,7 @@ class AtarSimulation extends PerformanceTestRunner with DigitalTariffsPerformanc
       )
 
   val correspondenceRequests: Seq[HttpRequestBuilder] =
-    strideAuthSignInRequests ++
+    strideAuthSignInRequests("12346") ++
       Seq(
         getStartPage,
         getCorrespondenceCase,
@@ -100,7 +100,7 @@ class AtarSimulation extends PerformanceTestRunner with DigitalTariffsPerformanc
       )
 
   val miscCaseRequests: Seq[HttpRequestBuilder] =
-    strideAuthSignInRequests ++
+    strideAuthSignInRequests("12347") ++
       Seq(
         getStartPage,
         getMiscCase,
@@ -147,7 +147,7 @@ class AtarSimulation extends PerformanceTestRunner with DigitalTariffsPerformanc
       getProtectedPageNoSession,
       getStrideSignIn,
       getIdpSignInPage,
-      postIdpSignInPage,
+      postIdpSignInPage("12346"),
       getSignInRedirect,
       postIdpResponseToStride,
       getStartPage,
