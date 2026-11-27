@@ -23,13 +23,10 @@ This code is open source software licensed under the [Apache 2.0 License]("http:
 1. **Service Manager 2** installed
 2. **SBT Version >=1.x** installed
 3. **MongoDB version >=5.0** installed and running on **port: 27017**
-4. **Localstack** installed and running on **port: 4572**
-5. Create an S3 bucket in Localstack by using this command within the localstack container:
-```
-awslocal s3 mb s3://digital-tariffs-local
-```
+4. **Moto (MotoServer)** running on **port: 4566**
+5. An S3 bucket called `digital-tariffs-local` created in Moto (see below)
 
-The easiest way to run MongoDB and Localstack for local development is to use Docker.
+The easiest way to run MongoDB and Moto for local development is to use Docker.
 
 ### Run Mongo
 
@@ -39,49 +36,28 @@ docker run --restart unless-stopped -d -p 27017-27019:27017-27019 --name mongodb
 
 ---
 
-### Localstack
+### Moto (S3)
 
 Please ensure you have Docker installed before continuing with these steps.
 
-#### Install Localstack:
+#### Start Moto:
 
-``` 
-docker run -d --restart unless-stopped --name localstack -e SERVICES=s3 -p4572:4566 -p8080:8080 localstack/localstack
-```
+[Moto](https://github.com/getmoto/moto) (MotoServer) listens on port 5000 inside the container, mapped to **4566** locally.
 
 ```
-pip install amazon_kclpy
+docker run -d --restart unless-stopped --name moto -p 4566:5000 motoserver/moto:5.1.18
 ```
-#### Start localstack
-
-Original main localstack port: `4572`
-
-Possible port depending on configurations: `4566`
-
-> Note: Starting with version 0.11.0, all APIs are exposed via a single edge service,
-> which is accessible on http://localhost:4572 by default (customizable via EDGE_PORT, see further below).
-> https://github.com/localstack/localstack#overview
 
 #### Check the current port using
 
 ```
-docker port localstack
-```
----
-### Whilst the **Localstack** container is running:
-
-**Execute your Localstack container**
-
-Open a new terminal session in the container (`localstack_main` by default) using:
-
-```
-docker exec -it localstack bash
+docker port moto
 ```
 ---
 
 ### Configure AWS credentials
 
-In your LocalStack terminal session run:
+On your machine run:
 ```
 aws configure
 ```
@@ -99,12 +75,12 @@ Default output format [None]:
 ### Create the bucket
 
 ```
-awslocal s3 mb s3://digital-tariffs-local
+aws --endpoint-url=http://localhost:4566 s3 mb s3://digital-tariffs-local
 ```
 
 Then check this URL is available in the browser:
 
-> **http://localhost:4572/digital-tariffs-local**
+> **http://localhost:4566/digital-tariffs-local**
 
 **Note:** You should see some XML in your browser if successful
 
